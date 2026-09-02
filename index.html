@@ -17,13 +17,13 @@
                     <span class="logo-sub">Events &amp; More</span>
                 </a>
             </div>
-           <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="shop.html">Cakes</a></li>
-    <li><a href="custom-order.html">Custom Order</a></li>
-    <li><a href="delivery.html">Delivery</a></li>
-    <li><a href="index.html#about">About</a></li>
-</ul>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="shop.html">Cakes</a></li>
+                <li><a href="custom-order.html">Custom Order</a></li>
+                <li><a href="delivery.html">Delivery</a></li>
+                <li><a href="index.html#about">About</a></li>
+            </ul>
             <div class="nav-actions">
                 <a href="cart.html" class="cart-icon">
                     🛒 <span class="cart-count">0</span>
@@ -222,7 +222,19 @@
         </div>
     </section>
 
-    <!-- ====== THE MARVY PROMISE ====== -->
+    <!-- ====== TESTIMONIALS ====== -->
+    <section class="testimonials-section">
+        <div class="section-header-luxury">
+            <span class="section-tag">💬 Testimonials</span>
+            <h2>What Our <span class="gold-text">Customers Say</span></h2>
+            <p>Real reviews from real people</p>
+            <div class="section-divider"></div>
+        </div>
+        <div class="testimonials-grid" id="testimonialsGrid">
+            <div class="loading-luxury">✨ Loading reviews...</div>
+        </div>
+    </section>
+   <!-- ====== THE MARVY PROMISE ====== -->
     <section class="why-luxury">
         <div class="section-header-luxury">
             <span class="section-tag">💎 Our Promise</span>
@@ -253,42 +265,6 @@
                 <div class="feature-icon">💝</div>
                 <h3>Personal To You</h3>
                 <p>Your vision. Your colours. Your celebration.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- ====== TESTIMONIALS ====== -->
-    <section class="testimonials-section">
-        <div class="section-header-luxury">
-            <span class="section-tag">💬 Testimonials</span>
-            <h2>What Our <span class="gold-text">Customers Say</span></h2>
-            <p>Real reviews from real people</p>
-            <div class="section-divider"></div>
-        </div>
-        <div class="testimonials-grid">
-            <div class="testimonial-card">
-                <div class="testimonial-stars">★★★★★</div>
-                <p class="testimonial-text">"The cake was absolutely beautiful and tasted even better! Everyone at the party asked where we got it. Highly recommend!"</p>
-                <div class="testimonial-author">
-                    <span class="author-name">— Sarah O.</span>
-                    <span class="author-occasion">Birthday Cake</span>
-                </div>
-            </div>
-            <div class="testimonial-card">
-                <div class="testimonial-stars">★★★★★</div>
-                <p class="testimonial-text">"Marvy Cakes made our wedding day extra special. The cake was stunning and exactly what we wanted. Thank you!"</p>
-                <div class="testimonial-author">
-                    <span class="author-name">— Michael & Grace</span>
-                    <span class="author-occasion">Wedding Cake</span>
-                </div>
-            </div>
-            <div class="testimonial-card">
-                <div class="testimonial-stars">★★★★★</div>
-                <p class="testimonial-text">"The surprise package was perfect! My wife loved everything. Professional service from start to finish."</p>
-                <div class="testimonial-author">
-                    <span class="author-name">— David O.</span>
-                    <span class="author-occasion">Surprise Package</span>
-                </div>
             </div>
         </div>
     </section>
@@ -351,7 +327,7 @@
                 <ul>
                     <li><a href="#">Contact Us</a></li>
                     <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Delivery Info</a></li>
+                    <li><a href="delivery.html">Delivery Info</a></li>
                     <li><a href="#">Returns</a></li>
                 </ul>
             </div>
@@ -373,12 +349,6 @@
     <script src="js/utils.js"></script>
 
     <script>
-        // Load products when page loads
-        document.addEventListener('DOMContentLoaded', async function() {
-            await loadProducts();
-            await loadBestSellers();
-        });
-
         // Display products function
         function displayProducts(products, container) {
             if (!products || products.length === 0) {
@@ -451,7 +421,6 @@
                 if (bestSellers.length > 0) {
                     displayProducts(bestSellers, grid);
                 } else {
-                    // Show first 4 products as fallback
                     const fallback = products.slice(0, 4);
                     displayProducts(fallback, grid);
                 }
@@ -460,6 +429,52 @@
                 grid.innerHTML = '<p class="error-msg">Unable to load best sellers.</p>';
             }
         }
+
+        // Load testimonials from Supabase (SIMPLIFIED & FIXED)
+        async function loadTestimonials() {
+            const grid = document.getElementById('testimonialsGrid');
+            
+            try {
+                // Simple query without filters first
+                const { data: testimonials, error } = await supabase
+                    .from('testimonials')
+                    .select('*');
+
+                console.log('Testimonials data:', testimonials);
+                console.log('Testimonials error:', error);
+
+                if (error) {
+                    console.error('Error loading testimonials:', error);
+                    grid.innerHTML = '<p class="error-msg">Unable to load reviews.</p>';
+                    return;
+                }
+
+                if (testimonials && testimonials.length > 0) {
+                    grid.innerHTML = testimonials.map(testimonial => `
+                        <div class="testimonial-card">
+                            <div class="testimonial-stars">${'★'.repeat(testimonial.rating || 5)}${'☆'.repeat(5 - (testimonial.rating || 5))}</div>
+                            <p class="testimonial-text">"${testimonial.review_text}"</p>
+                            <div class="testimonial-author">
+                                <span class="author-name">— ${testimonial.customer_name}</span>
+                                ${testimonial.occasion ? `<span class="author-occasion">${testimonial.occasion}</span>` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    grid.innerHTML = '<p class="no-products">No reviews yet. Be the first to leave a review!</p>';
+                }
+            } catch (error) {
+                console.error('Error loading testimonials:', error);
+                grid.innerHTML = '<p class="error-msg">Unable to load reviews.</p>';
+            }
+        }
+
+        // Load everything when page loads
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadProducts();
+            await loadBestSellers();
+            await loadTestimonials();
+        });
     </script>
 </body>
 </html>
