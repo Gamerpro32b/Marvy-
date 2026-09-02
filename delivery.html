@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvy Cakes - Delivery Information</title>
+    <link rel="stylesheet" href="css/global.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <span class="logo-text">MARVY CAKES</span>
+                    <span class="logo-sub">Events &amp; More</span>
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Cakes</a></li>
+                <li><a href="delivery.html" class="active">Delivery</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="cart.html" class="cart-icon">
+                    🛒 <span class="cart-count">0</span>
+                </a>
+                <a href="#account" class="account-icon">👤</a>
+            </div>
+            <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <section class="page-header-luxury">
+            <h1>Delivery <span class="gold-text">Information</span></h1>
+            <p>How we get your cakes and treats to you</p>
+            <div class="section-divider"></div>
+        </section>
+
+        <section class="delivery-container">
+            <!-- Delivery Locations -->
+            <div class="delivery-section">
+                <h2>📍 Delivery Locations</h2>
+                <p><strong>We currently deliver to:</strong></p>
+                <ul>
+                    <li>[ADD DELIVERY LOCATIONS]</li>
+                    <li>e.g., Lagos, Abuja, Port Harcourt, etc.</li>
+                </ul>
+                <p><small>📍 <em>More locations coming soon. Contact us if your location isn't listed.</em></small></p>
+            </div>
+
+            <!-- Delivery Fees -->
+            <div class="delivery-section">
+                <h2>💰 Delivery Fees</h2>
+                <div class="delivery-fees-grid">
+                    <div class="fee-card">
+                        <h3>Local</h3>
+                        <p class="fee-price">[ADD LOCAL FEE]</p>
+                        <p>Within [ADD CITY]</p>
+                    </div>
+                    <div class="fee-card">
+                        <h3>State</h3>
+                        <p class="fee-price">[ADD STATE FEE]</p>
+                        <p>Within [ADD STATE]</p>
+                    </div>
+                    <div class="fee-card">
+                        <h3>Nationwide</h3>
+                        <p class="fee-price">[ADD NATIONWIDE FEE]</p>
+                        <p>Outside [ADD STATE]</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivery Timeframe -->
+            <div class="delivery-section">
+                <h2>⏰ Delivery Timeframe</h2>
+                <ul>
+                    <li><strong>Same-day delivery:</strong> [ADD SAME-DAY POLICY]</li>
+                    <li><strong>Next-day delivery:</strong> [ADD NEXT-DAY POLICY]</li>
+                    <li><strong>Custom orders:</strong> [ADD NOTICE PERIOD]</li>
+                </ul>
+            </div>
+
+            <!-- Pickup Option -->
+            <div class="delivery-section">
+                <h2>🏠 Pickup Option</h2>
+                <p>[ADD PICKUP DETAILS]</p>
+                <p><strong>Location:</strong> [ADD PICKUP ADDRESS]</p>
+                <p><strong>Hours:</strong> [ADD PICKUP HOURS]</p>
+            </div>
+
+            <!-- Delivery Hours -->
+            <div class="delivery-section">
+                <h2>🕐 Delivery Hours</h2>
+              <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html">Cakes</a></li>
+    <li><a href="custom-order.html">Custom Order</a></li>
+    <li><a href="delivery.html">Delivery</a></li>
+    <li><a href="#about">About</a></li>
+</ul>
+            </div>
+
+            <!-- Unavailable Policy -->
+            <div class="delivery-section">
+                <h2>📋 What If You're Unavailable?</h2>
+                <p>[ADD POLICY]</p>
+            </div>
+
+            <!-- Contact for Delivery Questions -->
+            <div class="delivery-section contact-delivery">
+                <h2>💬 Delivery Questions?</h2>
+                <p>Have questions about delivery? Contact us on WhatsApp or email.</p>
+                <div class="contact-buttons">
+                    <a href="https://wa.me/2347048513759" target="_blank" class="btn-whatsapp">💬 WhatsApp</a>
+                    <a href="mailto:anighoromarvelous@gmail.com" class="btn-primary">📧 Email</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>MARVY CAKES</h3>
+                <p>Luxury cakes, gifts, food and celebration experiences made for unforgettable moments.</p>
+                <div class="social-links">
+                    <a href="#">📷</a>
+                    <a href="#">📘</a>
+                    <a href="#">🐦</a>
+                    <a href="#">📌</a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Explore</h4>
+                <ul>
+                    <li><a href="shop.html">Cakes</a></li>
+                    <li><a href="#">Hampers</a></li>
+                    <li><a href="#">Food</a></li>
+                    <li><a href="#">Surprise Packages</a></li>
+                    <li><a href="#">Sign-out Packages</a></li>
+                    <li><a href="#">Event Decoration</a></li>
+                </ul>
+            </div>
+            <div class="footer-service">
+                <h4>Customer Care</h4>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="delivery.html">Delivery Info</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Get in Touch</h4>
+                <p>📞 <a href="https://wa.me/2347048513759" target="_blank">WhatsApp: +234 704 851 3759</a></p>
+                <p>📧 <a href="mailto:anighoromarvelous@gmail.com">anighoromarvelous@gmail.com</a></p>
+                <p>📍 Akungba Akoko, Nigeria</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Marvy Cakes &amp; Events. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/utils.js"></script>
+    <script>
+        // Update cart count
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+        });
+    </script>
+</body>
+</html>

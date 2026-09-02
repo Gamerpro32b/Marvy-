@@ -3107,3 +3107,297 @@ p {
         padding: 2rem;
     }
 }
+/* ========== TESTIMONIALS ========== */
+.testimonials-section {
+    padding: 4rem 2rem;
+    max-width: var(--container-width);
+    margin: 0 auto;
+}
+
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.testimonial-card {
+    background: var(--color-white);
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-subtle);
+    border: 1px solid rgba(232, 160, 184, 0.06);
+    transition: transform 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-medium);
+}
+
+.testimonial-stars {
+    color: #f4c542;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    margin-bottom: 0.8rem;
+}
+
+.testimonial-text {
+    color: var(--color-soft-black);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+.testimonial-author {
+    display: flex;
+    flex-direction: column;
+}
+
+.author-name {
+    font-weight: 600;
+    color: var(--color-deep-rose);
+}
+
+.author-occasion {
+    font-size: 0.8rem;
+    color: #5a4a4a;
+}
+
+.product-category {
+    font-size: 0.8rem;
+    color: #5a4a4a;
+    margin-bottom: 0.3rem;
+}
+/* ========== DELIVERY PAGE ========== */
+.delivery-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.delivery-section {
+    background: var(--color-white);
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-subtle);
+    border: 1px solid rgba(232, 160, 184, 0.06);
+}
+
+.delivery-section h2 {
+    font-family: var(--font-heading);
+    color: var(--color-deep-rose);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(232, 160, 184, 0.2);
+}
+
+.delivery-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.delivery-section ul li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(232, 160, 184, 0.05);
+}
+
+.delivery-fees-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+}
+
+.fee-card {
+    background: var(--color-light-pink);
+    padding: 1.5rem;
+    border-radius: var(--border-radius-md);
+    text-align: center;
+}
+
+.fee-card h3 {
+    font-family: var(--font-heading);
+    color: var(--color-deep-rose);
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+}
+
+.fee-card .fee-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-blush);
+}
+
+.contact-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.contact-buttons .btn-whatsapp,
+.contact-buttons .btn-primary {
+    padding: 0.8rem 2rem;
+}
+
+@media (max-width: 768px) {
+    .delivery-container {
+        padding: 1rem;
+    }
+    
+    .delivery-fees-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .delivery-section {
+        padding: 1.2rem;
+    }
+}
+/* ============================================
+   CUSTOM ORDER PAGE
+   ============================================ */
+
+.custom-order-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.custom-order-form .form-section-luxury {
+    background: var(--color-white);
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-subtle);
+    border: 1px solid rgba(232, 160, 184, 0.06);
+}
+
+.custom-order-form .form-section-luxury h3 {
+    font-family: var(--font-heading);
+    color: var(--color-deep-rose);
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(232, 160, 184, 0.15);
+}
+
+.custom-order-form .form-group {
+    margin-bottom: 1.2rem;
+}
+
+.custom-order-form .form-group label {
+    display: block;
+    font-weight: 600;
+    color: var(--color-deep-rose);
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+}
+
+.custom-order-form .form-group input,
+.custom-order-form .form-group textarea,
+.custom-order-form .form-group select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 2px solid rgba(232, 160, 184, 0.2);
+    border-radius: var(--border-radius-sm);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    background: var(--color-warm-ivory);
+    color: var(--color-soft-black);
+}
+
+.custom-order-form .form-group input:focus,
+.custom-order-form .form-group textarea:focus,
+.custom-order-form .form-group select:focus {
+    outline: none;
+    border-color: var(--color-blush);
+}
+
+.custom-order-form .form-group select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236D3047' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    cursor: pointer;
+}
+
+.custom-order-form .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.custom-order-form .image-hint {
+    font-size: 0.8rem;
+    color: #5a4a4a;
+    margin-top: 0.3rem;
+}
+
+.custom-order-form .image-preview {
+    margin-top: 1rem;
+    width: 150px;
+    height: 150px;
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+    border: 2px solid rgba(232, 160, 184, 0.2);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-order-form .image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.custom-submit-btn {
+    width: 100%;
+    padding: 1.2rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    background: var(--gradient-pink);
+    color: var(--color-white);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    box-shadow: var(--shadow-medium);
+}
+
+.custom-submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-luxury);
+    background: var(--color-deep-rose);
+}
+
+.custom-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .custom-order-container {
+        padding: 1rem;
+    }
+    
+    .custom-order-form .form-section-luxury {
+        padding: 1.2rem;
+    }
+    
+    .custom-order-form .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .custom-order-form .image-preview {
+        width: 120px;
+        height: 120px;
+    }
+}
