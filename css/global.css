@@ -3400,28 +3400,66 @@ p {
         width: 120px;
         height: 120px;
     }
+
+/* ============================================
+   END OF FILE - WIDE LAYOUT
+   ============================================ */
+
+/* Force wider product grid on mobile */
+.product-grid-luxury {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.8rem !important;
 }
-/* ========== FORCE WIDER LAYOUT ON MOBILE ========== */
+
+/* ... all the other wide layout code ... */
+
+/* Footer - compact */
+.footer {
+    padding: 2rem 1rem 1rem !important;
+}
+
+.footer-container {
+    gap: 1.5rem !important;
+}
+/* ========== MOBILE NAVIGATION ========== */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: var(--color-deep-rose);
+    cursor: pointer;
+}
+
 @media (max-width: 768px) {
-    .product-grid-luxury {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 0.8rem !important;
+    .menu-toggle {
+        display: block;
     }
     
-    .product-card-luxury .product-image-container {
-        height: 140px !important;
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: var(--color-white);
+        padding: 1rem 0;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        z-index: 999;
     }
     
-    .product-card-luxury .product-info h3 {
-        font-size: 0.8rem !important;
+    .nav-links.active {
+        display: flex !important;
     }
     
-    .product-card-luxury .product-info .product-price {
-        font-size: 0.9rem !important;
+    .nav-links li {
+        padding: 0.5rem 2rem;
+        border-bottom: 1px solid rgba(232, 160, 184, 0.1);
     }
     
-    .btn-add {
-        font-size: 0.65rem !important;
-        padding: 0.3rem 0.8rem !important;
+    .nav-links li:last-child {
+        border-bottom: none;
     }
 }
