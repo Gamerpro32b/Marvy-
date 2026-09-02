@@ -3401,3 +3401,27 @@ p {
         height: 120px;
     }
 }
+/* ========== FORCE WIDER LAYOUT ON MOBILE ========== */
+@media (max-width: 768px) {
+    .product-grid-luxury {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.8rem !important;
+    }
+    
+    .product-card-luxury .product-image-container {
+        height: 140px !important;
+    }
+    
+    .product-card-luxury .product-info h3 {
+        font-size: 0.8rem !important;
+    }
+    
+    .product-card-luxury .product-info .product-price {
+        font-size: 0.9rem !important;
+    }
+    
+    .btn-add {
+        font-size: 0.65rem !important;
+        padding: 0.3rem 0.8rem !important;
+    }
+}
