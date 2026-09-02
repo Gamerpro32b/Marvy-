@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvy Cakes & Events - Premium Cakes & Celebrations</title>
+    <link rel="stylesheet" href="css/global.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <span class="logo-text">MARVY CAKES</span>
+                    <span class="logo-sub">Events &amp; More</span>
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Cakes</a></li>
+                <li><a href="#categories">Categories</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="cart.html" class="cart-icon">
+                    🛒 <span class="cart-count">0</span>
+                </a>
+                <a href="#account" class="account-icon">👤</a>
+            </div>
+            <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </nav>
+
+    <!-- ====== HERO SECTION ====== -->
+    <section class="hero-luxury">
+        <div class="hero-luxury-content">
+            <div class="hero-badge">✨ Premium Cakes &amp; Events</div>
+            <h1>Crafted For Your<br><span class="gold-text">Most Beautiful</span> Moments</h1>
+            <p>Luxury cakes, curated gifts and unforgettable celebrations — beautifully made for every occasion.</p>
+            <div class="hero-buttons">
+                <a href="shop.html" class="btn-luxury">Explore Collection →</a>
+                <a href="#featured" class="btn-luxury-secondary">Start Your Order</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">200+</span>
+                    <span class="stat-label">Happy Clients</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">50+</span>
+                    <span class="stat-label">Cake Designs</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Satisfaction</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-luxury-image">
+            <div class="hero-image-container">
+                <img src="assets/images/hero-cake.jpeg" alt="Marvy Cakes" class="hero-main-image">
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FEATURED PRODUCTS ====== -->
+    <section id="featured" class="featured-luxury">
+        <div class="section-header-luxury">
+            <span class="section-tag">✨ Our Collection</span>
+            <h2>Our <span class="gold-text">Signature Collection</span></h2>
+            <p>Beautifully crafted pieces for unforgettable moments</p>
+            <div class="section-divider"></div>
+        </div>
+        <div class="product-grid-luxury" id="productGrid">
+            <div class="loading-luxury">✨ Loading cakes...</div>
+        </div>
+    </section>
+
+    <!-- ====== SHOP BY EXPERIENCE ====== -->
+    <section id="categories" class="categories-luxury">
+        <div class="section-header-luxury">
+            <span class="section-tag">📂 Shop By</span>
+            <h2>Shop By <span class="gold-text">Experience</span></h2>
+            <div class="section-divider"></div>
+        </div>
+        <div class="category-grid-luxury">
+            <div class="category-card-luxury" style="background: linear-gradient(135deg, #5d4037, #8d6e63);">
+                <div class="category-image-wrapper">
+                    <img src="assets/images/hero-cake.jpeg" alt="Cakes" class="category-img">
+                </div>
+                <h3>Cakes</h3>
+                <p>Bento, Birthday, Wedding, Sign-out &amp; more</p>
+                <a href="shop.html?category=Cakes" class="category-link">Explore →</a>
+            </div>
+            <div class="category-card-luxury" style="background: linear-gradient(135deg, #8d6e63, #5d4037);">
+                <div class="category-image-wrapper">
+                    <img src="assets/images/hamper-gift.jpg" alt="Hampers" class="category-img">
+                </div>
+                <h3>Hampers</h3>
+                <p>Thoughtfully curated gifts for every occasion</p>
+                <a href="shop.html?category=Hampers" class="category-link">Explore →</a>
+            </div>
+            <div class="category-card-luxury" style="background: linear-gradient(135deg, #5d4037, #a1887f);">
+                <div class="category-image-wrapper">
+                    <img src="assets/images/hero-cake.jpeg" alt="Food" class="category-img">
+                </div>
+                <h3>Food</h3>
+                <p>Food trays &amp; boxes for celebrations</p>
+                <a href="shop.html?category=Food" class="category-link">Explore →</a>
+            </div>
+            <div class="category-card-luxury" style="background: linear-gradient(135deg, #a1887f, #5d4037);">
+                <div class="category-image-wrapper">
+                    <img src="assets/images/surprise-package.jpeg" alt="Surprise Packages" class="category-img">
+                </div>
+                <h3>Surprise Packages</h3>
+                <p>Beautiful surprises for him &amp; her</p>
+                <a href="shop.html?category=Surprise" class="category-link">Explore →</a>
+            </div>
+            <div class="category-card-luxury" style="background: linear-gradient(135deg, #5d4037, #795548);">
+                <div class="category-image-wrapper">
+                    <img src="assets/images/signout-cake.jpeg" alt="Sign-out Packages" class="category-img">
+                </div>
+                <h3>Sign-out Packages</h3>
+                <p>Celebrate their achievement in style</p>
+                <a href="shop.html?category=Sign-Out" class="category-link">Explore →</a>
+            </div>
+            <div class="category-card-luxury" style="background: linear-gradient(135deg, #795548, #5d4037);">
+                <div class="category-image-wrapper">
+                    <img src="assets/images/corporate-events.jpeg" alt="Event Decoration" class="category-img">
+                </div>
+                <h3>Event Decoration</h3>
+                <p>Balloon decorations &amp; event styling</p>
+                <a href="shop.html?category=Decoration" class="category-link">Explore →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CELEBRATE EVERY MOMENT ====== -->
+    <section class="celebrate-section-visual">
+        <div class="section-header-luxury">
+            <span class="section-tag">🎉 Celebrate</span>
+            <h2>Celebrate <span class="gold-text">Every Moment</span></h2>
+            <p>From intimate gatherings to grand celebrations</p>
+            <div class="section-divider"></div>
+        </div>
+        <div class="celebrate-grid-visual">
+            <div class="celebrate-card-visual">
+                <div class="celebrate-image">
+                    <img src="assets/images/birthday-cake.jpeg" alt="Birthday Cake" class="celebrate-img">
+                </div>
+                <div class="celebrate-info">
+                    <h3>Birthday</h3>
+                    <p>Make their day unforgettable with a custom cake</p>
+                    <a href="shop.html?category=Cakes" class="celebrate-link">Explore →</a>
+                </div>
+            </div>
+            <div class="celebrate-card-visual">
+                <div class="celebrate-image">
+                    <img src="assets/images/wedding-cake.jpeg" alt="Wedding Cake" class="celebrate-img">
+                </div>
+                <div class="celebrate-info">
+                    <h3>Wedding</h3>
+                    <p>Elegant cakes for your most beautiful day</p>
+                    <a href="shop.html?category=Cakes" class="celebrate-link">Explore →</a>
+                </div>
+            </div>
+            <div class="celebrate-card-visual">
+                <div class="celebrate-image">
+                    <img src="assets/images/anniversary-cake.jpeg" alt="Anniversary Cake" class="celebrate-img">
+                </div>
+                <div class="celebrate-info">
+                    <h3>Anniversary</h3>
+                    <p>Celebrate your love story with something sweet</p>
+                    <a href="shop.html?category=Cakes" class="celebrate-link">Explore →</a>
+                </div>
+            </div>
+            <div class="celebrate-card-visual">
+                <div class="celebrate-image">
+                    <img src="assets/images/signout-cake.jpeg" alt="Sign-out Celebration" class="celebrate-img">
+                </div>
+                <div class="celebrate-info">
+                    <h3>Sign-Out</h3>
+                    <p>Honour their achievement with a celebration</p>
+                    <a href="shop.html?category=Sign-Out" class="celebrate-link">Explore →</a>
+                </div>
+            </div>
+            <div class="celebrate-card-visual">
+                <div class="celebrate-image">
+                    <img src="assets/images/surprise-package.jpeg" alt="Romantic Surprise" class="celebrate-img">
+                </div>
+                <div class="celebrate-info">
+                    <h3>Romantic Surprise</h3>
+                    <p>For that special someone who deserves the best</p>
+                    <a href="shop.html?category=Surprise" class="celebrate-link">Explore →</a>
+                </div>
+            </div>
+            <div class="celebrate-card-visual">
+                <div class="celebrate-image">
+                    <img src="assets/images/corporate-events.jpeg" alt="Corporate Events" class="celebrate-img">
+                </div>
+                <div class="celebrate-info">
+                    <h3>Corporate Events</h3>
+                    <p>Professional celebrations for your team</p>
+                    <a href="shop.html?category=Cakes" class="celebrate-link">Explore →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== THE MARVY PROMISE ====== -->
+    <section class="why-luxury">
+        <div class="section-header-luxury">
+            <span class="section-tag">💎 Our Promise</span>
+            <h2>The <span class="gold-text">Marvy Promise</span></h2>
+            <div class="section-divider"></div>
+        </div>
+        <div class="features-grid-luxury">
+            <div class="feature-card-luxury">
+                <div class="feature-number">01</div>
+                <div class="feature-icon">✨</div>
+                <h3>Crafted With Intention</h3>
+                <p>Every creation is designed around your occasion.</p>
+            </div>
+            <div class="feature-card-luxury">
+                <div class="feature-number">02</div>
+                <div class="feature-icon">🌟</div>
+                <h3>Made For Your Moment</h3>
+                <p>From intimate celebrations to grand events.</p>
+            </div>
+            <div class="feature-card-luxury">
+                <div class="feature-number">03</div>
+                <div class="feature-icon">🎨</div>
+                <h3>Beautifully Presented</h3>
+                <p>Because the experience begins before the first bite.</p>
+            </div>
+            <div class="feature-card-luxury">
+                <div class="feature-number">04</div>
+                <div class="feature-icon">💝</div>
+                <h3>Personal To You</h3>
+                <p>Your vision. Your colours. Your celebration.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CTA BANNER ====== -->
+    <section class="cta-banner">
+        <div class="cta-content">
+            <h2>Your Moment Deserves<br><span class="gold-text">Something Beautiful</span></h2>
+            <p>From cakes to curated surprises and unforgettable decorations, let Marvy make your celebration special.</p>
+            <a href="shop.html" class="btn-luxury-cta">Start Your Order →</a>
+        </div>
+    </section>
+<!-- ====== ABOUT SECTION ====== -->
+<section id="about" class="about-section">
+    <div class="section-header-luxury">
+        <span class="section-tag">📖 About Us</span>
+        <h2>Who We <span class="gold-text">Are</span></h2>
+        <div class="section-divider"></div>
+    </div>
+    <div class="about-content">
+        <div class="about-text">
+            <h3>Marvy Cakes &amp; Events</h3>
+            <p>We are a premium cake and events brand dedicated to making your celebrations unforgettable.</p>
+            <p>From custom cakes to curated hampers, surprise packages, and event decorations — we bring your vision to life.</p>
+            <p><strong>By Anighoro Marvellous Ejaife</strong></p>
+        </div>
+        <div class="about-image">
+            <span style="font-size:5rem;">🎂</span>
+        </div>
+    </div>
+</section>
+    <!-- ====== FOOTER ====== -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>MARVY CAKES</h3>
+                <p>Luxury cakes, gifts, food and celebration experiences made for unforgettable moments.</p>
+                <div class="social-links">
+                    <a href="#">📷</a>
+                    <a href="#">📘</a>
+                    <a href="#">🐦</a>
+                    <a href="#">📌</a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Explore</h4>
+                <ul>
+                    <li><a href="shop.html">Cakes</a></li>
+                    <li><a href="#">Hampers</a></li>
+                    <li><a href="#">Food</a></li>
+                    <li><a href="#">Surprise Packages</a></li>
+                    <li><a href="#">Sign-out Packages</a></li>
+                    <li><a href="#">Event Decoration</a></li>
+                </ul>
+            </div>
+            <div class="footer-service">
+                <h4>Customer Care</h4>
+                <ul>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Delivery</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Get in Touch</h4>
+                <p>📞 WhatsApp: +234 800 000 0000</p>
+                <p>📧 info@marvycakes.com</p>
+                <p>📍 Lagos, Nigeria</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Marvy Cakes &amp; Events. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/utils.js"></script>
+
+    <script>
+        // Load products when page loads
+        document.addEventListener('DOMContentLoaded', async function() {
+            const productGrid = document.getElementById('productGrid');
+            
+            try {
+                const products = await getProducts();
+                
+                if (products && products.length > 0) {
+                    const featuredProducts = products.slice(0, 4);
+                    productGrid.innerHTML = featuredProducts.map(product => {
+                        let badgeHTML = '';
+                        if (product.badge === 'Best Seller') {
+                            badgeHTML = `<span class="product-badge best-seller">⭐ Best Seller</span>`;
+                        } else if (product.badge === 'New') {
+                            badgeHTML = `<span class="product-badge new">✨ New</span>`;
+                        }
+
+                        return `
+                            <div class="product-card-luxury">
+                                <div class="product-image-container">
+                                    ${badgeHTML}
+                                    <div class="product-image">
+                                        ${product.image_url ? 
+                                            `<img src="${product.image_url}" alt="${product.name}">` :
+                                            '🎂'
+                                        }
+                                    </div>
+                                    <div class="product-overlay">
+                                        <a href="product-details.html?id=${product.id}" class="btn-view">View Details</a>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <h3>${product.name}</h3>
+                                    <p class="product-price">₦${product.price.toLocaleString()}</p>
+                                    <button class="btn-add" onclick="addToCart(${JSON.stringify(product).replace(/"/g, "'")})">
+                                        Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    productGrid.innerHTML = '<p class="no-products">No products available yet.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+                productGrid.innerHTML = '<p class="error-msg">Error loading products. Please refresh.</p>';
+            }
+        });
+    </script>
+</body>
+</html>

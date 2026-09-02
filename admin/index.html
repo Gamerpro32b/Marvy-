@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvy Cakes - Admin Dashboard</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Admin Navigation -->
+    <nav class="admin-nav">
+        <div class="admin-nav-container">
+            <div class="admin-nav-logo">
+                <span class="logo-text">👑 MARVY CAKES</span>
+                <span class="logo-sub">Admin Panel</span>
+            </div>
+            <ul class="admin-nav-links">
+                <li><a href="index.html" class="active">Dashboard</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="orders.html">Orders</a></li>
+            </ul>
+            <button class="admin-logout-btn" id="logoutBtn">🚪 Logout</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+        <div class="admin-header">
+            <h1>Dashboard</h1>
+            <p>Welcome back, Admin! Here's your business overview.</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="admin-stats" id="adminStats">
+            <div class="stat-card">
+                <span class="stat-icon">📦</span>
+                <div>
+                    <h3 id="totalProducts">0</h3>
+                    <p>Total Products</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">🛒</span>
+                <div>
+                    <h3 id="totalOrders">0</h3>
+                    <p>Total Orders</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">💰</span>
+                <div>
+                    <h3 id="totalRevenue">₦0</h3>
+                    <p>Total Revenue</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">👤</span>
+                <div>
+                    <h3 id="totalCustomers">0</h3>
+                    <p>Customers</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Push Notification Settings -->
+        <div class="push-settings-container">
+            <div class="push-settings-card">
+                <div class="push-settings-header">
+                    <span class="push-icon">🔔</span>
+                    <div>
+                        <h3>Push Notifications</h3>
+                        <p>Get instant notifications on your device when new orders arrive</p>
+                    </div>
+                </div>
+                <div class="push-settings-body">
+                    <div id="pushStatus" class="push-status">
+                        <span class="status-dot" id="statusDot"></span>
+                        <span id="statusText">Checking...</span>
+                    </div>
+                    <div class="push-actions">
+                        <button id="enablePushBtn" class="btn-primary" style="display:none;">
+                            🔔 Enable Notifications
+                        </button>
+                        <button id="disablePushBtn" class="btn-secondary" style="display:none;">
+                            🔕 Disable Notifications
+                        </button>
+                        <button id="testPushBtn" class="btn-secondary" style="display:none;">
+                            📨 Test Notification
+                        </button>
+                    </div>
+                    <div id="pushMessage" class="push-message"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="admin-recent-orders">
+            <h2>Recent Orders</h2>
+            <div id="recentOrders">
+                <p class="loading">Loading orders...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer admin-footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>MARVY CAKES</h3>
+                <p>Premium cakes, hampers, food, surprises &amp; event decorations.</p>
+                <div class="social-links">
+                    <a href="#">📷</a>
+                    <a href="#">📘</a>
+                    <a href="#">🐦</a>
+                    <a href="#">📌</a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="shop.html">Shop All</a></li>
+                    <li><a href="#">Cakes</a></li>
+                    <li><a href="#">Hampers</a></li>
+                    <li><a href="#">Surprise Packages</a></li>
+                </ul>
+            </div>
+            <div class="footer-service">
+                <h4>Customer Service</h4>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Delivery Info</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Get in Touch</h4>
+                <p>📞 WhatsApp: +234 800 000 0000</p>
+                <p>📧 info@marvycakes.com</p>
+                <p>📍 Lagos, Nigeria</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Marvy Cakes &amp; Events. All rights reserved.</p>
+        </div>
+    </footer>
+        <!-- ====== JAVASCRIPT ====== -->
+    <script src="../js/config.js"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="../js/push.js"></script>
+
+    <script>
+        // ============================================
+        // ADMIN DASHBOARD - MARVY CAKES
+        // ============================================
+
+        // Check login
+        document.addEventListener('DOMContentLoaded', function() {
+            const loggedIn = localStorage.getItem('adminLoggedIn');
+            if (!loggedIn) {
+                window.location.href = 'login.html';
+                return;
+            }
+            loadDashboardStats();
+            loadRecentOrders();
+            updatePushStatus();
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('adminLoggedIn');
+            window.location.href = 'login.html';
+        });
+
+        // Load stats
+        async function loadDashboardStats() {
+            try {
+                // Check if getProducts exists
+                if (typeof getProducts === 'undefined') {
+                    console.error('❌ getProducts() not defined. Check supabase.js path.');
+                    document.getElementById('totalProducts').textContent = 'Error';
+                    return;
+                }
+                
+                const products = await getProducts();
+                document.getElementById('totalProducts').textContent = products.length;
+                
+                const { data: orders, error } = await supabase
+                    .from('orders')
+                    .select('*');
+
+                if (error) {
+                    console.error('Error loading orders:', error);
+                    return;
+                }
+
+                const totalOrders = orders.length;
+                const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
+                const uniqueCustomers = new Set(orders.map(o => o.customer_phone)).size;
+
+                document.getElementById('totalOrders').textContent = totalOrders;
+                document.getElementById('totalRevenue').textContent = `₦${totalRevenue.toLocaleString()}`;
+                document.getElementById('totalCustomers').textContent = uniqueCustomers;
+            } catch (error) {
+                console.error('Error loading stats:', error);
+                document.getElementById('totalProducts').textContent = 'Error';
+            }
+        }
+
+        // Load recent orders
+        async function loadRecentOrders() {
+            const container = document.getElementById('recentOrders');
+            
+            try {
+                const { data: orders, error } = await supabase
+                    .from('orders')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+
+                if (error) {
+                    console.error('Error loading recent orders:', error);
+                    container.innerHTML = '<p class="error-msg">Error loading orders.</p>';
+                    return;
+                }
+
+                if (orders && orders.length > 0) {
+                    container.innerHTML = `
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${orders.map(order => `
+                                    <tr>
+                                        <td><strong>${order.order_number}</strong></td>
+                                        <td>${order.customer_name}</td>
+                                        <td>₦${order.total.toLocaleString()}</td>
+                                        <td><span class="order-status ${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></td>
+                                        <td>${new Date(order.created_at).toLocaleDateString()}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                        ${orders.length >= 5 ? `<p style="text-align:right;margin-top:0.5rem;"><a href="orders.html" style="color:var(--color-blush);">View all orders →</a></p>` : ''}
+                    `;
+                } else {
+                    container.innerHTML = '<p>No orders yet.</p>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                container.innerHTML = '<p class="error-msg">Error loading orders.</p>';
+            }
+        }
+
+        // ============================================
+        // PUSH NOTIFICATION UI CONTROLS (FIXED)
+        // ============================================
+
+        // Get all elements with null checks
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const enableBtn = document.getElementById('enablePushBtn');
+        const disableBtn = document.getElementById('disablePushBtn');
+        const testBtn = document.getElementById('testPushBtn');
+        const messageEl = document.getElementById('pushMessage');
+
+        // Show message (safe)
+        function showMessage(type, text) {
+            if (!messageEl) return;
+            messageEl.className = 'push-message ' + type;
+            messageEl.textContent = text;
+            messageEl.style.display = 'block';
+            setTimeout(() => { messageEl.style.display = 'none'; }, 5000);
+        }
+
+        // Update push status (FIXED)
+        async function updatePushStatus() {
+            console.log('🔄 Updating push status...');
+            
+            // Safety check - if elements don't exist, exit
+            if (!statusDot || !statusText) {
+                console.warn('⚠️ Push status elements not found in DOM');
+                return;
+            }
+
+            try {
+                // Check if getPushStatus exists
+                if (typeof getPushStatus === 'undefined') {
+                    console.error('❌ getPushStatus() not defined. Check push.js path.');
+                    statusDot.className = 'status-dot inactive';
+                    statusText.textContent = '❌ Push module not loaded';
+                    if (enableBtn) enableBtn.style.display = 'none';
+                    if (disableBtn) disableBtn.style.display = 'none';
+                    if (testBtn) testBtn.style.display = 'none';
+                    return;
+                }
+
+                // Get the actual status from push.js
+                const status = await getPushStatus();
+                console.log('📊 Status result:', status);
+
+                // Update UI based on status
+                if (!status.supported) {
+                    statusDot.className = 'status-dot inactive';
+                    statusText.textContent = '❌ Push not supported on this browser';
+                    if (enableBtn) enableBtn.style.display = 'none';
+                    if (disableBtn) disableBtn.style.display = 'none';
+                    if (testBtn) testBtn.style.display = 'none';
+                    return;
+                }
+                
+                if (status.subscribed) {
+                    statusDot.className = 'status-dot active';
+                    statusText.textContent = '✅ Notifications enabled';
+                    if (enableBtn) enableBtn.style.display = 'none';
+                    if (disableBtn) disableBtn.style.display = 'inline-block';
+                    if (testBtn) testBtn.style.display = 'inline-block';
+                } else {
+                    statusDot.className = 'status-dot inactive';
+                    statusText.textContent = '🔕 Notifications disabled';
+                    if (enableBtn) enableBtn.style.display = 'inline-block';
+                    if (disableBtn) disableBtn.style.display = 'none';
+                    if (testBtn) testBtn.style.display = 'none';
+                }
+
+                console.log('✅ Push status updated successfully');
+
+            } catch (error) {
+                console.error('❌ Error updating push status:', error);
+                // Show error state
+                statusDot.className = 'status-dot inactive';
+                statusText.textContent = '❌ Error checking status';
+                if (enableBtn) enableBtn.style.display = 'none';
+                if (disableBtn) disableBtn.style.display = 'none';
+                if (testBtn) testBtn.style.display = 'none';
+            }
+        }
+
+        // Enable button (safe)
+        if (enableBtn) {
+            enableBtn.addEventListener('click', async function() {
+                showMessage('info', '📨 Requesting permission...');
+                const result = await subscribeToPush();
+                if (result) {
+                    showMessage('success', '✅ Push notifications enabled!');
+                    await updatePushStatus();
+                } else {
+                    showMessage('error', '❌ Failed to enable push notifications.');
+                }
+            });
+        }
+
+        // Disable button (safe)
+        if (disableBtn) {
+            disableBtn.addEventListener('click', async function() {
+                const result = await unsubscribeFromPush();
+                if (result) {
+                    showMessage('success', '✅ Push notifications disabled.');
+                    await updatePushStatus();
+                } else {
+                    showMessage('error', '❌ Failed to disable push notifications.');
+                }
+            });
+        }
+
+        // Test button (safe)
+        if (testBtn) {
+            testBtn.addEventListener('click', async function() {
+                showMessage('info', '📨 Sending test notification...');
+                
+                try {
+                    // Check if subscription exists
+                    const { data, error } = await supabase
+                        .from('push_subscriptions')
+                        .select('subscription')
+                        .eq('id', 1)
+                        .single();
+
+                    if (error || !data || !data.subscription || Object.keys(data.subscription).length === 0) {
+                        showMessage('error', '❌ No active push subscription found. Please enable notifications first.');
+                        return;
+                    }
+
+                    // Send test notification via Edge Function
+                    const response = await fetch('https://xdojtbdnwzzviuudojel.supabase.co/functions/v1/send-order-email', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer sb_publishable_KBG5XapjMANcG7M0imXHJg_QjR_YfxG'
+                        },
+                        body: JSON.stringify({
+                            type: 'test_push',
+                            title: '🔔 Test Notification',
+                            body: 'Test from Marvy Cakes! 🎂',
+                            icon: '🎂',
+                            url: '/admin/orders.html'
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        showMessage('success', '✅ Test notification sent! Check your device.');
+                    } else {
+                        showMessage('error', '❌ Test failed: ' + (result.error || 'Unknown error'));
+                    }
+                } catch (error) {
+                    console.error('Test notification error:', error);
+                    showMessage('error', '❌ Test failed: ' + error.message);
+                }
+            });
+        }
+
+        console.log('✅ Admin dashboard loaded');
+    </script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvy Cakes - Cart</title>
+    <link rel="stylesheet" href="css/global.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <span class="logo-text">MARVY CAKES</span>
+                    <span class="logo-sub">Events &amp; More</span>
+                </a>
+            </div>
+           <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html">Cakes</a></li>
+    <li><a href="index.html#categories">Categories</a></li>
+    <li><a href="index.html#about">About</a></li>
+</ul>
+            <div class="nav-actions">
+                <a href="cart.html" class="cart-icon">
+                    🛒 <span class="cart-count">0</span>
+                </a>
+                <a href="#account" class="account-icon">👤</a>
+            </div>
+            <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <section class="page-header-luxury">
+            <h1>Your <span class="gold-text">Cart</span></h1>
+            <p>Review your selections</p>
+            <div class="section-divider"></div>
+        </section>
+
+        <section class="cart-container-luxury" id="cartContainer">
+            <!-- Cart Items -->
+            <div class="cart-items-luxury" id="cartItems">
+                <div class="empty-cart-luxury">
+                    <div class="empty-cart-icon">🛒</div>
+                    <h3>Your cart is empty</h3>
+                    <p>Browse our luxury collection and add some beautiful products.</p>
+                    <a href="shop.html" class="btn-luxury-empty">Start Shopping →</a>
+                    <div class="empty-cart-suggestions">
+                        <span>🎂 Cakes</span>
+                        <span>📦 Hampers</span>
+                        <span>🎁 Surprise Packages</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cart Summary -->
+            <div class="cart-summary-luxury" id="cartSummary">
+                <h3>Order Summary</h3>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="subtotal">₦0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery</span>
+                    <span id="deliveryFee">₦1,000</span>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="total">₦0.00</span>
+                </div>
+                <a href="checkout.html" class="btn-checkout-luxury" id="checkoutBtn" style="display:none;">
+                    Proceed to Checkout →
+                </a>
+                <div class="secure-checkout">
+                    <span>🔒</span>
+                    <span>Secure Checkout</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>MARVY CAKES</h3>
+                <p>Premium cakes, hampers, food, surprises &amp; event decorations.</p>
+                <div class="social-links">
+                    <a href="#">📷</a>
+                    <a href="#">📘</a>
+                    <a href="#">🐦</a>
+                    <a href="#">📌</a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="shop.html">Shop All</a></li>
+                    <li><a href="#">Cakes</a></li>
+                    <li><a href="#">Hampers</a></li>
+                    <li><a href="#">Surprise Packages</a></li>
+                </ul>
+            </div>
+            <div class="footer-service">
+                <h4>Customer Service</h4>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Delivery Info</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Get in Touch</h4>
+                <p>📞 WhatsApp: +234 800 000 0000</p>
+                <p>📧 info@marvycakes.com</p>
+                <p>📍 Lagos, Nigeria</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Marvy Cakes &amp; Events. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/utils.js"></script>
+
+    <script>
+        // Render cart when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCartLuxury();
+            updateCartCount();
+        });
+
+        // Render cart with luxury styles
+        function renderCartLuxury() {
+            const container = document.getElementById('cartItems');
+            const summary = document.getElementById('cartSummary');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            const cart = loadCart();
+
+            if (!container) return;
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart-luxury">
+                        <div class="empty-cart-icon">🛒</div>
+                        <h3>Your cart is empty</h3>
+                        <p>Browse our luxury collection and add some beautiful products.</p>
+                        <a href="shop.html" class="btn-luxury-empty">Start Shopping →</a>
+                        <div class="empty-cart-suggestions">
+                            <span>🎂 Cakes</span>
+                            <span>📦 Hampers</span>
+                            <span>🎁 Surprise Packages</span>
+                        </div>
+                    </div>
+                `;
+                if (summary) summary.style.display = 'block';
+                if (checkoutBtn) checkoutBtn.style.display = 'none';
+                document.getElementById('subtotal').textContent = '₦0.00';
+                document.getElementById('total').textContent = '₦0.00';
+                return;
+            }
+
+            if (summary) summary.style.display = 'block';
+            if (checkoutBtn) checkoutBtn.style.display = 'block';
+
+            let subtotal = 0;
+
+            container.innerHTML = cart.map((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+
+                return `
+                    <div class="cart-item-luxury" data-index="${index}">
+                        <div class="cart-item-image-luxury">
+                            ${item.image_url ? 
+                                `<img src="${item.image_url}" alt="${item.name}">` :
+                                '🎂'
+                            }
+                        </div>
+                        <div class="cart-item-details-luxury">
+                            <h4>${item.name}</h4>
+                            <p class="cart-item-price-luxury">₦${item.price.toLocaleString()}</p>
+                            <div class="cart-item-actions-luxury">
+                                <div class="qty-control-luxury">
+                                    <button class="qty-btn-luxury" onclick="updateQuantity(${index}, -1)">−</button>
+                                    <span class="qty-number-luxury">${item.quantity}</span>
+                                    <button class="qty-btn-luxury" onclick="updateQuantity(${index}, 1)">+</button>
+                                </div>
+                                <button class="remove-btn-luxury" onclick="removeFromCart(${index})">🗑️ Remove</button>
+                            </div>
+                        </div>
+                        <div class="cart-item-total-luxury">
+                            <span>₦${itemTotal.toLocaleString()}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            const deliveryFee = subtotal > 10000 ? 0 : 1000;
+            const total = subtotal + deliveryFee;
+
+            document.getElementById('subtotal').textContent = `₦${subtotal.toLocaleString()}`;
+            document.getElementById('deliveryFee').textContent = deliveryFee === 0 ? 'Free' : `₦${deliveryFee.toLocaleString()}`;
+            document.getElementById('total').textContent = `₦${total.toLocaleString()}`;
+
+            if (cart.length === 0 && checkoutBtn) {
+                checkoutBtn.style.display = 'none';
+            }
+        }
+
+        const originalRenderCart = renderCart;
+        renderCart = renderCartLuxury;
+    </script>
+</body>
+</html>

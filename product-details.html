@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvy Cakes - Product Details</title>
+    <link rel="stylesheet" href="css/global.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <span class="logo-text">MARVY CAKES</span>
+                    <span class="logo-sub">Events &amp; More</span>
+                </a>
+            </div>
+            <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html">Cakes</a></li>
+    <li><a href="index.html#categories">Categories</a></li>
+    <li><a href="index.html#about">About</a></li>
+</ul>
+            <div class="nav-actions">
+                <a href="cart.html" class="cart-icon">
+                    🛒 <span class="cart-count">0</span>
+                </a>
+                <a href="#account" class="account-icon">👤</a>
+            </div>
+            <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <section class="product-detail-section" id="productDetail">
+            <div class="product-detail-container">
+                <!-- Product Image -->
+                <div class="product-image-container">
+                    <div class="product-main-image" id="productMainImage">
+                        <div class="image-placeholder">🎂</div>
+                    </div>
+                    <div class="product-thumbnails">
+                        <div class="thumbnail active">🎂</div>
+                        <div class="thumbnail">🧁</div>
+                        <div class="thumbnail">🎈</div>
+                    </div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="product-info-container">
+                    <div class="product-breadcrumb">
+                        <a href="shop.html">Shop</a> / <span id="productCategory">Category</span>
+                    </div>
+
+                    <h1 id="productName">Product Name</h1>
+
+                    <div class="product-rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="rating-count">(12 reviews)</span>
+                    </div>
+
+                    <div class="product-price-container">
+                        <span class="product-price" id="productPrice">₦0.00</span>
+                        <span class="product-badge" id="productBadge">Premium</span>
+                    </div>
+
+                    <div class="product-stock" id="productStock">
+                        <span class="stock-dot in-stock"></span>
+                        <span>In Stock</span>
+                    </div>
+
+                    <div class="product-description" id="productDescription">
+                        <p>Product description goes here.</p>
+                    </div>
+
+                    <!-- Size Selector -->
+                    <div class="size-section" id="sizeSection" style="display:none;">
+                        <label>Select Size</label>
+                        <select class="size-selector" id="sizeSelector">
+                            <option value="">Select size...</option>
+                        </select>
+                    </div>
+                    <div class="product-size-info" id="sizeInfo" style="display:none;">
+                        <span class="size-label">Selected: <span id="selectedSize">-</span></span>
+                    </div>
+
+                    <!-- Quantity Selector -->
+                    <div class="quantity-section">
+                        <label>Quantity</label>
+                        <div class="quantity-selector">
+                            <button class="qty-btn" id="qtyMinus">−</button>
+                            <span class="qty-number" id="qtyNumber">1</span>
+                            <button class="qty-btn" id="qtyPlus">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="product-actions">
+                        <button class="btn-primary add-to-cart-btn" id="addToCartBtn">
+                            Add to Cart
+                        </button>
+                        <button class="btn-secondary buy-now-btn" id="buyNowBtn">
+                            Buy Now
+                        </button>
+                    </div>
+
+                    <!-- Product Meta -->
+                    <div class="product-meta">
+                        <div class="meta-item">
+                            <span class="meta-icon">📦</span>
+                            <span>Free delivery on orders over ₦10,000</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-icon">🔄</span>
+                            <span>30-day return policy</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-icon">🔒</span>
+                            <span>Secure checkout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Related Products -->
+        <section class="related-products">
+            <div class="section-header-luxury">
+                <h2>You May Also Like</h2>
+                <div class="section-divider"></div>
+                <p class="subtitle">Complete your celebration</p>
+            </div>
+            <div class="product-grid" id="relatedProducts">
+                <div class="loading">Loading recommendations...</div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>MARVY CAKES</h3>
+                <p>Premium cakes, hampers, food, surprises &amp; event decorations.</p>
+                <div class="social-links">
+                    <a href="#">📷</a>
+                    <a href="#">📘</a>
+                    <a href="#">🐦</a>
+                    <a href="#">📌</a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="shop.html">Shop All</a></li>
+                    <li><a href="#">Cakes</a></li>
+                    <li><a href="#">Hampers</a></li>
+                    <li><a href="#">Surprise Packages</a></li>
+                </ul>
+            </div>
+            <div class="footer-service">
+                <h4>Customer Service</h4>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Delivery Info</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Get in Touch</h4>
+                <p>📞 WhatsApp: +234 800 000 0000</p>
+                <p>📧 info@marvycakes.com</p>
+                <p>📍 Lagos, Nigeria</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Marvy Cakes &amp; Events. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/utils.js"></script>
+
+    <script>
+        // Get product ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+        console.log('Product ID from URL:', productId);
+
+        let currentProduct = null;
+        let quantity = 1;
+
+        // Load product details
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (!productId) {
+                document.getElementById('productDetail').innerHTML = `
+                    <div style="text-align:center;padding:4rem 2rem;">
+                        <h2>Product Not Found</h2>
+                        <p>Please select a product from the shop.</p>
+                        <a href="shop.html" class="btn-primary" style="margin-top:1rem;display:inline-block;">Browse Products</a>
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                const product = await getProductById(productId);
+                console.log('Product data from Supabase:', product);
+                
+                if (product) {
+                    currentProduct = product;
+                    displayProduct(product);
+                    loadRelatedProducts(product.category);
+                } else {
+                    document.getElementById('productDetail').innerHTML = `
+                        <div style="text-align:center;padding:4rem 2rem;">
+                            <h2>Product Not Found</h2>
+                            <p>The product you're looking for doesn't exist.</p>
+                            <a href="shop.html" class="btn-primary" style="margin-top:1rem;display:inline-block;">Browse Products</a>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading product:', error);
+                document.getElementById('productDetail').innerHTML = `
+                    <div style="text-align:center;padding:4rem 2rem;">
+                        <h2>Error Loading Product</h2>
+                        <p>Please try again later.</p>
+                    </div>
+                `;
+            }
+        });
+
+        // Get sizes function
+        function getProductSizes(product) {
+            if (product.sizes && typeof product.sizes === 'object') {
+                return product.sizes;
+            }
+            return null;
+        }
+
+        // Get price for a specific size
+        function getSizePrice(product, size) {
+            if (product.sizes && product.sizes[size]) {
+                return product.sizes[size];
+            }
+            return product.price;
+        }
+
+        // Display product
+        function displayProduct(product) {
+            document.getElementById('productName').textContent = product.name;
+            document.getElementById('productCategory').textContent = product.category || 'Cakes';
+            document.getElementById('productPrice').textContent = '₦' + product.price.toLocaleString();
+            document.getElementById('productDescription').innerHTML = '<p>' + (product.description || 'Premium cake from Marvy Cakes & Events.') + '</p>';
+
+            // Check if product has sizes
+            const sizes = getProductSizes(product);
+            const sizeSection = document.getElementById('sizeSection');
+            const sizeSelector = document.getElementById('sizeSelector');
+            const sizeInfo = document.getElementById('sizeInfo');
+            const selectedSizeSpan = document.getElementById('selectedSize');
+
+            if (sizes && Object.keys(sizes).length > 0) {
+                sizeSection.style.display = 'flex';
+                sizeSelector.innerHTML = '<option value="">Select size...</option>';
+                
+                const sizeKeys = Object.keys(sizes);
+                for (let i = 0; i < sizeKeys.length; i++) {
+                    const size = sizeKeys[i];
+                    const price = sizes[size];
+                    const option = document.createElement('option');
+                    option.value = size;
+                    option.textContent = size + ' — ₦' + price.toLocaleString();
+                    sizeSelector.appendChild(option);
+                }
+
+                const defaultSize = sizeKeys[0];
+                sizeSelector.value = defaultSize;
+                updatePriceForSize(product, defaultSize);
+                selectedSizeSpan.textContent = defaultSize;
+                sizeInfo.style.display = 'block';
+
+                sizeSelector.onchange = function() {
+                    const selected = this.value;
+                    if (selected) {
+                        updatePriceForSize(product, selected);
+                        selectedSizeSpan.textContent = selected;
+                        sizeInfo.style.display = 'block';
+                    } else {
+                        document.getElementById('productPrice').textContent = '₦' + product.price.toLocaleString();
+                        sizeInfo.style.display = 'none';
+                    }
+                };
+            } else {
+                sizeSection.style.display = 'none';
+                sizeInfo.style.display = 'none';
+            }
+
+            // Stock status
+            const stockEl = document.getElementById('productStock');
+            if (product.stock > 0) {
+                stockEl.innerHTML = `
+                    <span class="stock-dot in-stock"></span>
+                    <span>In Stock (${product.stock} available)</span>
+                `;
+            } else {
+                stockEl.innerHTML = `
+                    <span class="stock-dot out-of-stock"></span>
+                    <span>Out of Stock</span>
+                `;
+            }
+
+            // Product image
+            const imageContainer = document.getElementById('productMainImage');
+            if (product.image_url) {
+                imageContainer.innerHTML = `
+                    <img src="${product.image_url}" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;">
+                `;
+            } else {
+                imageContainer.innerHTML = '<div class="image-placeholder">🎂</div>';
+            }
+
+            // Update cart count
+            updateCartCount();
+        }
+
+        function updatePriceForSize(product, size) {
+            const price = getSizePrice(product, size);
+            document.getElementById('productPrice').textContent = '₦' + price.toLocaleString();
+        }
+
+        // Load related products
+        async function loadRelatedProducts(category) {
+            const container = document.getElementById('relatedProducts');
+            
+            try {
+                const allProducts = await getProducts();
+                const related = allProducts.filter(function(p) {
+                    return p.category === category && p.id !== currentProduct.id;
+                }).slice(0, 4);
+
+                if (related.length > 0) {
+                    container.innerHTML = related.map(function(product) {
+                        return `
+                            <div class="product-card-luxury">
+                                <div class="product-image-container">
+                                    <div class="product-image">
+                                        ${product.image_url ? 
+                                            '<img src="' + product.image_url + '" alt="' + product.name + '">' :
+                                            '🎂'
+                                        }
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <h3>${product.name}</h3>
+                                    <p class="product-price">₦${product.price.toLocaleString()}</p>
+                                    <a href="product-details.html?id=${product.id}" class="btn-add">View Details</a>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    container.innerHTML = '<p style="text-align:center;color:#5a4a4a;">No related products found.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading related products:', error);
+                container.innerHTML = '<p style="text-align:center;color:#5a4a4a;">Could not load recommendations.</p>';
+            }
+        }
+
+        // Quantity controls
+        document.getElementById('qtyMinus').addEventListener('click', function() {
+            if (quantity > 1) {
+                quantity--;
+                document.getElementById('qtyNumber').textContent = quantity;
+            }
+        });
+
+        document.getElementById('qtyPlus').addEventListener('click', function() {
+            if (currentProduct && quantity < (currentProduct.stock || 99)) {
+                quantity++;
+                document.getElementById('qtyNumber').textContent = quantity;
+            }
+        });
+
+        // Add to Cart
+        document.getElementById('addToCartBtn').addEventListener('click', function() {
+            if (currentProduct) {
+                const sizeSelector = document.getElementById('sizeSelector');
+                const selectedSize = sizeSelector && sizeSelector.style.display !== 'none' ? sizeSelector.value : null;
+                
+                const sizes = getProductSizes(currentProduct);
+                if (sizes && Object.keys(sizes).length > 0 && !selectedSize) {
+                    showToast('Select Size', 'Please select a size before adding to cart.', '⚠️', 'error');
+                    return;
+                }
+                
+                // Add to cart using the original function from supabase.js
+                addToCart(currentProduct);
+                
+                this.textContent = '✅ Added!';
+                this.style.background = '#2e7d32';
+                this.style.color = 'white';
+                setTimeout(function() {
+                    document.getElementById('addToCartBtn').textContent = 'Add to Cart';
+                    document.getElementById('addToCartBtn').style.background = '';
+                    document.getElementById('addToCartBtn').style.color = '';
+                }, 2000);
+            }
+        });
+
+        // Buy Now
+        document.getElementById('buyNowBtn').addEventListener('click', function() {
+            if (currentProduct) {
+                const sizeSelector = document.getElementById('sizeSelector');
+                const selectedSize = sizeSelector && sizeSelector.style.display !== 'none' ? sizeSelector.value : null;
+                
+                const sizes = getProductSizes(currentProduct);
+                if (sizes && Object.keys(sizes).length > 0 && !selectedSize) {
+                    showToast('Select Size', 'Please select a size before buying.', '⚠️', 'error');
+                    return;
+                }
+                
+                addToCart(currentProduct);
+                window.location.href = 'cart.html';
+            }
+        });
+    </script>
+</body>
+</html>

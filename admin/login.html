@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARVY-CAKE- Admin Login</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <section class="admin-login-section">
+        <div class="admin-login-container">
+            <div class="admin-login-header">
+                <span class="admin-logo">👑</span>
+                <h1>MARVY-CAKE</h1>
+                <p>Admin Panel</p>
+                <div class="section-divider"></div>
+            </div>
+
+            <form class="admin-login-form" id="adminLoginForm">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="adminEmail" placeholder="admin@wealth-nails.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="adminPassword" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn-primary login-btn">Login to Dashboard</button>
+                <p class="login-error" id="loginError"></p>
+            </form>
+        </div>
+    </section>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/supabase.js"></script>
+    <script>
+        document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
+            const errorEl = document.getElementById('loginError');
+            
+            errorEl.textContent = '';
+            errorEl.style.display = 'none';
+            
+            try {
+                // For now, simple login (we'll add Supabase Auth later)
+                // Hardcoded for testing - CHANGE THIS LATER!
+                if (email === 'admin@wealth-nails.com' && password === 'wealth123') {
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    window.location.href = 'index.html';
+                } else {
+                    errorEl.textContent = '❌ Invalid email or password';
+                    errorEl.style.display = 'block';
+                }
+            } catch (error) {
+                errorEl.textContent = '❌ Login failed. Please try again.';
+                errorEl.style.display = 'block';
+                console.error('Login error:', error);
+            }
+        });
+    </script>
+</body>
+</html>

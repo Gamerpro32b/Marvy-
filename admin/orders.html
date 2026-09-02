@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvy Cakes - Manage Orders</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Admin Navigation -->
+    <nav class="admin-nav">
+        <div class="admin-nav-container">
+            <div class="admin-nav-logo">
+                <span class="logo-text">👑 MARVY CAKES</span>
+                <span class="logo-sub">Admin Panel</span>
+            </div>
+            <ul class="admin-nav-links">
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="orders.html" class="active">Orders</a></li>
+            </ul>
+            <button class="admin-logout-btn" id="logoutBtn">🚪 Logout</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+        <div class="admin-header">
+            <h1>Manage Orders</h1>
+            <p>View, update, and manage customer orders</p>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
+                <button class="btn-primary" onclick="exportOrders()" style="padding:0.6rem 1.5rem;font-size:0.85rem;">
+                    📥 Export CSV
+                </button>
+                <button class="btn-secondary" onclick="clearOldOrders()" style="padding:0.6rem 1.5rem;font-size:0.85rem;">
+                    🗑️ Clear Old Orders (30+ days)
+                </button>
+            </div>
+        </div>
+
+        <!-- Order Stats -->
+        <div class="admin-stats" id="orderStats">
+            <div class="stat-card" style="border-left: 4px solid var(--color-blush);">
+                <span class="stat-icon">📦</span>
+                <div>
+                    <h3 id="totalOrders">0</h3>
+                    <p>Total Orders</p>
+                </div>
+            </div>
+            <div class="stat-card" style="border-left: 4px solid #ff9800;">
+                <span class="stat-icon">⏳</span>
+                <div>
+                    <h3 id="pendingOrders">0</h3>
+                    <p>Pending</p>
+                </div>
+            </div>
+            <div class="stat-card" style="border-left: 4px solid #2196f3;">
+                <span class="stat-icon">🔄</span>
+                <div>
+                    <h3 id="processingOrders">0</h3>
+                    <p>Processing</p>
+                </div>
+            </div>
+            <div class="stat-card" style="border-left: 4px solid #4caf50;">
+                <span class="stat-icon">✅</span>
+                <div>
+                    <h3 id="completedOrders">0</h3>
+                    <p>Completed</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="orders-filter-container">
+            <div class="orders-filter">
+                <select id="statusFilter">
+                    <option value="all">📋 All Orders</option>
+                    <option value="pending">⏳ Pending</option>
+                    <option value="processing">🔄 Processing</option>
+                    <option value="completed">✅ Completed</option>
+                    <option value="cancelled">❌ Cancelled</option>
+                </select>
+
+                <select id="dateFilter">
+                    <option value="all">📅 All Time</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                </select>
+
+                <input type="text" id="searchOrders" placeholder="🔍 Search by name or order #...">
+            </div>
+            <div class="orders-count" id="ordersCount">
+                Showing <span id="visibleCount">0</span> orders
+            </div>
+        </div>
+
+        <!-- Orders List -->
+        <div class="admin-orders-list">
+            <div id="ordersList">
+                <p class="loading">✨ Loading orders...</p>
+            </div>
+            <!-- Pagination -->
+            <div class="pagination-container" id="paginationContainer">
+                <button class="pagination-btn" id="prevPage" onclick="changePage(-1)">← Prev</button>
+                <span class="pagination-info" id="pageInfo">Page 1 of 1</span>
+                <button class="pagination-btn" id="nextPage" onclick="changePage(1)">Next →</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>MARVY CAKES</h3>
+                <p>Premium cakes, hampers, food, surprises &amp; event decorations.</p>
+                <div class="social-links">
+                    <a href="#">📷</a>
+                    <a href="#">📘</a>
+                    <a href="#">🐦</a>
+                    <a href="#">📌</a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="shop.html">Shop All</a></li>
+                    <li><a href="#">Cakes</a></li>
+                    <li><a href="#">Hampers</a></li>
+                    <li><a href="#">Surprise Packages</a></li>
+                </ul>
+            </div>
+            <div class="footer-service">
+                <h4>Customer Service</h4>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Delivery Info</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Get in Touch</h4>
+                <p>📞 WhatsApp: +234 800 000 0000</p>
+                <p>📧 info@marvycakes.com</p>
+                <p>📍 Lagos, Nigeria</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Marvy Cakes &amp; Events. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="../js/config.js"></script>
+    <script src="../js/supabase.js"></script>
+    <script>
+        // ============================================
+        // ORDERS MANAGEMENT - MARVY CAKES
+        // ============================================
+
+        let currentPage = 1;
+        const ordersPerPage = 10;
+        let allOrders = [];
+
+        // Check login
+        document.addEventListener('DOMContentLoaded', function() {
+            const loggedIn = localStorage.getItem('adminLoggedIn');
+            if (!loggedIn) {
+                window.location.href = 'login.html';
+                return;
+            }
+            loadAllOrders();
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('adminLoggedIn');
+            window.location.href = 'login.html';
+        });
+
+        // Load all orders with filters
+        async function loadAllOrders() {
+            try {
+                const { data: orders, error } = await supabase
+                    .from('orders')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    console.error('Error loading orders:', error);
+                    document.getElementById('ordersList').innerHTML = '<p class="error-msg">❌ Error loading orders.</p>';
+                    return;
+                }
+
+                allOrders = orders || [];
+                updateStats();
+                applyFilters();
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('ordersList').innerHTML = '<p class="error-msg">❌ Error loading orders.</p>';
+            }
+        }
+
+        // Update stats
+        function updateStats() {
+            const total = allOrders.length;
+            const pending = allOrders.filter(o => o.status === 'pending').length;
+            const processing = allOrders.filter(o => o.status === 'processing').length;
+            const completed = allOrders.filter(o => o.status === 'completed').length;
+
+            document.getElementById('totalOrders').textContent = total;
+            document.getElementById('pendingOrders').textContent = pending;
+            document.getElementById('processingOrders').textContent = processing;
+            document.getElementById('completedOrders').textContent = completed;
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+            const searchTerm = document.getElementById('searchOrders').value.toLowerCase();
+
+            let filtered = [...allOrders];
+
+            if (statusFilter !== 'all') {
+                filtered = filtered.filter(o => o.status === statusFilter);
+            }
+
+            const now = new Date();
+            if (dateFilter === 'today') {
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                filtered = filtered.filter(o => new Date(o.created_at) >= today);
+            } else if (dateFilter === 'week') {
+                const weekAgo = new Date(now);
+                weekAgo.setDate(weekAgo.getDate() - 7);
+                filtered = filtered.filter(o => new Date(o.created_at) >= weekAgo);
+            } else if (dateFilter === 'month') {
+                const monthAgo = new Date(now);
+                monthAgo.setDate(monthAgo.getDate() - 30);
+                filtered = filtered.filter(o => new Date(o.created_at) >= monthAgo);
+            }
+
+            if (searchTerm) {
+                filtered = filtered.filter(o => 
+                    o.order_number.toLowerCase().includes(searchTerm) ||
+                    o.customer_name.toLowerCase().includes(searchTerm) ||
+                    o.customer_phone.includes(searchTerm)
+                );
+            }
+
+            document.getElementById('visibleCount').textContent = filtered.length;
+            renderOrders(filtered);
+        }
+
+        // Render orders with pagination
+        function renderOrders(orders) {
+            const container = document.getElementById('ordersList');
+            const totalPages = Math.ceil(orders.length / ordersPerPage);
+            
+            if (currentPage > totalPages) currentPage = totalPages || 1;
+            
+            const start = (currentPage - 1) * ordersPerPage;
+            const end = start + ordersPerPage;
+            const pageOrders = orders.slice(start, end);
+
+            if (pageOrders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-orders">
+                        <span style="font-size:4rem;">📭</span>
+                        <h3>No Orders Found</h3>
+                        <p>Try adjusting your filters or check back later.</p>
+                    </div>
+                `;
+                document.getElementById('paginationContainer').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('paginationContainer').style.display = 'flex';
+            document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages || 1}`;
+            document.getElementById('prevPage').disabled = currentPage <= 1;
+            document.getElementById('nextPage').disabled = currentPage >= totalPages;
+
+            container.innerHTML = `
+                <table class="admin-table luxury-table">
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Customer</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${pageOrders.map(order => `
+                            <tr class="order-row">
+                                <td><strong>${order.order_number}</strong></td>
+                                <td>
+                                    ${order.customer_name}
+                                    <br><small style="color:#5a4a4a;font-size:0.75rem;">${order.customer_phone}</small>
+                                </td>
+                                <td class="price-gold">₦${order.total.toLocaleString()}</td>
+                                <td>
+                                    <span class="order-status ${order.status}">
+                                        ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                                    </span>
+                                </td>
+                                <td>${new Date(order.created_at).toLocaleDateString()}</td>
+                                <td>
+                                    <button class="admin-btn admin-btn-edit" onclick="viewOrder('${order.id}')">
+                                        👁️ View
+                                    </button>
+                                    <button class="admin-btn admin-btn-status" onclick="updateStatus('${order.id}')">
+                                        📝 Status
+                                    </button>
+                                    <button class="admin-btn admin-btn-complete" onclick="markComplete('${order.id}')">
+                                        ✅ Complete
+                                    </button>
+                                    <button class="admin-btn admin-btn-delete" onclick="deleteOrder('${order.id}')">
+                                        🗑️ Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Change page
+        function changePage(direction) {
+            currentPage += direction;
+            applyFilters();
+        }
+
+        // View order details
+        async function viewOrder(id) {
+            try {
+                const { data: order, error } = await supabase
+                    .from('orders')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+
+                if (error) {
+                    showToast('Error', 'Could not load order details.', '❌', 'error');
+                    return;
+                }
+
+                const items = order.items || [];
+                const itemsHTML = items.map(item => `
+                    <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(232,160,184,0.2);">
+                        <span>${item.name} × ${item.quantity}</span>
+                        <span style="color:var(--color-blush);font-weight:600;">₦${(item.price * item.quantity).toLocaleString()}</span>
+                    </div>
+                `).join('');
+
+                showToast(
+                    `📋 ${order.order_number}`,
+                    `
+                        <div style="text-align:left;margin-top:0.5rem;max-height:400px;overflow-y:auto;">
+                            <p><strong>👤 Customer:</strong> ${order.customer_name}</p>
+                            <p><strong>📞 Phone:</strong> ${order.customer_phone}</p>
+                            <p><strong>📧 Email:</strong> ${order.customer_email || 'N/A'}</p>
+                            <p><strong>📍 Address:</strong> ${order.delivery_address}</p>
+                            <p><strong>📌 Status:</strong> <span class="order-status ${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></p>
+                            <p><strong>📅 Date:</strong> ${new Date(order.created_at).toLocaleString()}</p>
+                            <div style="margin-top:0.5rem;padding-top:0.5rem;border-top:2px solid var(--color-blush);">
+                                <strong>🛍️ Items:</strong>
+                                ${itemsHTML}
+                            </div>
+                            <div style="margin-top:0.5rem;padding-top:0.5rem;border-top:2px solid var(--color-blush);">
+                                <p><strong>Subtotal:</strong> ₦${order.subtotal.toLocaleString()}</p>
+                                <p><strong>Delivery:</strong> ${order.delivery_fee === 0 ? 'Free' : `₦${order.delivery_fee.toLocaleString()}`}</p>
+                                <p style="font-size:1.3rem;font-weight:700;color:var(--color-blush);">
+                                    <strong>Total:</strong> ₦${order.total.toLocaleString()}
+                                </p>
+                            </div>
+                        </div>
+                    `,
+                    '📋',
+                    'success'
+                );
+
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Error', 'Could not load order details.', '❌', 'error');
+            }
+        }
+    </script>
+</body>
+</html>
+    <script>
+        // ============================================
+        // ORDERS MANAGEMENT - PART 2 (CONTINUED)
+        // ============================================
+
+        // Update order status
+        async function updateStatus(id) {
+            const statuses = ['pending', 'processing', 'completed', 'cancelled'];
+            const statusLabels = ['⏳ Pending', '🔄 Processing', '✅ Completed', '❌ Cancelled'];
+            
+            let message = '📝 Select new status:\n\n';
+            statuses.forEach((s, i) => {
+                message += `${i + 1}. ${statusLabels[i]}\n`;
+            });
+            message += '\nEnter number (1-4):';
+
+            const choice = prompt(message);
+            if (!choice) return;
+
+            const index = parseInt(choice) - 1;
+            if (index < 0 || index >= statuses.length) {
+                showToast('Invalid', 'Please select a valid option.', '❌', 'error');
+                return;
+            }
+
+            const newStatus = statuses[index];
+            const newLabel = statusLabels[index];
+
+            try {
+                const { error } = await supabase
+                    .from('orders')
+                    .update({ status: newStatus })
+                    .eq('id', id);
+
+                if (error) {
+                    console.error('Error updating status:', error);
+                    showToast('Error', 'Failed to update status.', '❌', 'error');
+                } else {
+                    showToast('Updated', `✅ Order status changed to ${newLabel}`, '✅', 'success');
+                    loadAllOrders();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Error', 'Something went wrong.', '❌', 'error');
+            }
+        }
+
+        // ===== MARK ORDER AS COMPLETE =====
+        async function markComplete(id) {
+            if (!confirm('✅ Mark this order as completed?')) return;
+
+            try {
+                const { error } = await supabase
+                    .from('orders')
+                    .update({ status: 'completed' })
+                    .eq('id', id);
+
+                if (error) {
+                    console.error('Error updating order:', error);
+                    showToast('Error', 'Failed to update order.', '❌', 'error');
+                } else {
+                    showToast('Completed', '✅ Order marked as completed!', '✅', 'success');
+                    loadAllOrders();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Error', 'Something went wrong.', '❌', 'error');
+            }
+        }
+
+        // ===== DELETE ORDER =====
+        async function deleteOrder(id) {
+            if (!confirm('⚠️ Are you sure you want to delete this order? This cannot be undone.')) return;
+
+            try {
+                const { error } = await supabase
+                    .from('orders')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) {
+                    console.error('Error deleting order:', error);
+                    showToast('Error', 'Failed to delete order.', '❌', 'error');
+                } else {
+                    showToast('Deleted', 'Order removed successfully.', '🗑️', 'success');
+                    loadAllOrders();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Error', 'Something went wrong.', '❌', 'error');
+            }
+        }
+
+        // ===== EXPORT ORDERS TO CSV =====
+        function exportOrders() {
+            if (allOrders.length === 0) {
+                showToast('No Orders', 'No orders to export.', '📭', 'error');
+                return;
+            }
+
+            let csv = 'Order #,Customer,Phone,Email,Address,Total,Status,Date\n';
+            allOrders.forEach(order => {
+                csv += `${order.order_number},${order.customer_name},${order.customer_phone},${order.customer_email || ''},${order.delivery_address},${order.total},${order.status},${new Date(order.created_at).toLocaleDateString()}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `orders-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            showToast('Exported', `📥 ${allOrders.length} orders exported to CSV`, '✅', 'success');
+        }
+
+        // ===== CLEAR OLD ORDERS (30+ DAYS) =====
+        async function clearOldOrders() {
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+            const oldOrders = allOrders.filter(o => new Date(o.created_at) < thirtyDaysAgo);
+            
+            if (oldOrders.length === 0) {
+                showToast('No Old Orders', 'No orders older than 30 days.', '📭', 'success');
+                return;
+            }
+
+            if (!confirm(`⚠️ Delete ${oldOrders.length} orders older than 30 days? This cannot be undone.`)) return;
+
+            try {
+                const ids = oldOrders.map(o => o.id);
+                const { error } = await supabase
+                    .from('orders')
+                    .delete()
+                    .in('id', ids);
+
+                if (error) {
+                    console.error('Error clearing orders:', error);
+                    showToast('Error', 'Failed to clear old orders.', '❌', 'error');
+                } else {
+                    showToast('Cleared', `🗑️ ${oldOrders.length} old orders removed.`, '✅', 'success');
+                    loadAllOrders();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Error', 'Something went wrong.', '❌', 'error');
+            }
+        }
+
+        // ===== FILTER EVENT LISTENERS =====
+        document.getElementById('statusFilter').addEventListener('change', () => {
+            currentPage = 1;
+            applyFilters();
+        });
+
+        document.getElementById('dateFilter').addEventListener('change', () => {
+            currentPage = 1;
+            applyFilters();
+        });
+
+        document.getElementById('searchOrders').addEventListener('input', () => {
+            currentPage = 1;
+            applyFilters();
+        });
+
+        console.log('✅ Marvy Cakes Orders Management loaded!');
+    </script>
+
+    <!-- ====== ADD CSS FOR COMPLETE BUTTON ====== -->
+    <style>
+        .admin-btn-complete {
+            background: #4caf50;
+            color: white;
+            border: 1px solid #4caf50;
+        }
+
+        .admin-btn-complete:hover {
+            background: #388e3c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .admin-btn-delete {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #c62828;
+        }
+
+        .admin-btn-delete:hover {
+            background: #c62828;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(198, 40, 40, 0.3);
+        }
+
+        .admin-btn-status {
+            background: #e3f2fd;
+            color: #0d47a1;
+            border: 1px solid #0d47a1;
+        }
+
+        .admin-btn-status:hover {
+            background: #0d47a1;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .admin-btn-edit {
+            background: var(--color-light-pink);
+            color: var(--color-deep-rose);
+            border: 1px solid var(--color-blush);
+        }
+
+        .admin-btn-edit:hover {
+            background: var(--color-blush);
+            color: var(--color-white);
+            transform: translateY(-2px);
+        }
+    </style>
+</body>
+</html>

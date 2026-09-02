@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvy Cakes - Checkout</title>
+    <link rel="stylesheet" href="css/global.css">
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script>
+        // Check if Paystack loaded
+        if (typeof PaystackPop === 'undefined') {
+            console.warn('⚠️ Paystack not loaded, trying fallback...');
+            const script = document.createElement('script');
+            script.src = 'https://js.paystack.co/v1/inline.js';
+            document.head.appendChild(script);
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <span class="logo-text">MARVY CAKES</span>
+                    <span class="logo-sub">Events &amp; More</span>
+                </a>
+            </div>
+            <<ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html">Cakes</a></li>
+    <li><a href="index.html#categories">Categories</a></li>
+    <li><a href="index.html#about">About</a></li>
+</ul>
+            <div class="nav-actions">
+                <a href="cart.html" class="cart-icon">
+                    🛒 <span class="cart-count">0</span>
+                </a>
+                <a href="#account" class="account-icon">👤</a>
+            </div>
+            <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <section class="page-header-luxury">
+            <h1>Secure <span class="gold-text">Checkout</span></h1>
+            <p>Complete your order</p>
+            <div class="section-divider"></div>
+        </section>
+
+        <section class="checkout-container-luxury">
+            <form class="checkout-form" id="checkoutForm">
+                <!-- Customer Details -->
+                <div class="form-section-luxury">
+                    <h3>Personal Details</h3>
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" id="fullName" placeholder="Jane Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number *</label>
+                        <input type="tel" id="phoneNumber" placeholder="080 1234 5678" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="email" placeholder="jane@example.com">
+                    </div>
+                </div>
+
+                <!-- Delivery Address -->
+                <div class="form-section-luxury">
+                    <h3>Delivery Address</h3>
+                    <div class="form-group">
+                        <label>Street Address *</label>
+                        <input type="text" id="address" placeholder="123 Main Street" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>City *</label>
+                            <input type="text" id="city" placeholder="Lagos" required>
+                        </div>
+                        <div class="form-group">
+                            <label>State *</label>
+                            <input type="text" id="state" placeholder="Lagos" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Delivery Instructions</label>
+                        <textarea id="deliveryInstructions" placeholder="Gate code, landmark, etc." rows="2"></textarea>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="form-section-luxury">
+                    <h3>Order Summary</h3>
+                    <div id="checkoutItems">
+                        <div class="loading">Loading cart...</div>
+                    </div>
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span id="checkoutSubtotal">₦0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Delivery</span>
+                        <span id="checkoutDelivery">₦0.00</span>
+                    </div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span id="checkoutTotal">₦0.00</span>
+                    </div>
+                </div>
+
+                <!-- Payment Button -->
+                <button type="submit" class="btn-checkout-luxury" id="placeOrderBtn">
+                    💳 Pay Now
+                </button>
+            </form>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>MARVY CAKES</h3>
+                <p>Premium cakes, hampers, food, surprises &amp; event decorations.</p>
+                <div class="social-links">
+                    <a href="#">📷</a>
+                    <a href="#">📘</a>
+                    <a href="#">🐦</a>
+                    <a href="#">📌</a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="shop.html">Shop All</a></li>
+                    <li><a href="#">Cakes</a></li>
+                    <li><a href="#">Hampers</a></li>
+                    <li><a href="#">Surprise Packages</a></li>
+                </ul>
+            </div>
+            <div class="footer-service">
+                <h4>Customer Service</h4>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Delivery Info</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Get in Touch</h4>
+                <p>📞 WhatsApp: +234 800 000 0000</p>
+                <p>📧 info@marvycakes.com</p>
+                <p>📍 Lagos, Nigeria</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Marvy Cakes &amp; Events. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/paystack.js"></script>
+    <script src="js/utils.js"></script>
+
+    <script>
+        // Load cart on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCart();
+            displayCheckoutCart();
+            updateCartCount();
+            
+            // Check if Paystack loaded
+            if (typeof PaystackPop === 'undefined') {
+                console.error('❌ Paystack not loaded!');
+                document.getElementById('placeOrderBtn').textContent = '⚠️ Payment unavailable';
+                document.getElementById('placeOrderBtn').disabled = true;
+                document.getElementById('placeOrderBtn').style.opacity = '0.5';
+            } else {
+                console.log('✅ Paystack loaded successfully');
+            }
+        });
+
+        // Display cart in checkout
+        function displayCheckoutCart() {
+            const container = document.getElementById('checkoutItems');
+            const cart = getCart();
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-checkout">
+                        <p>Your cart is empty.</p>
+                        <a href="shop.html" class="btn-luxury-empty" style="margin-top:1rem;display:inline-block;">Shop Now →</a>
+                    </div>
+                `;
+                document.getElementById('placeOrderBtn').style.display = 'none';
+                return;
+            }
+
+            let subtotal = 0;
+
+            container.innerHTML = cart.map(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+                return `
+                    <div class="checkout-item-luxury">
+                        <span class="checkout-item-name">${item.name} × ${item.quantity}</span>
+                        <span class="checkout-item-price">₦${itemTotal.toLocaleString()}</span>
+                    </div>
+                `;
+            }).join('');
+
+            const deliveryFee = subtotal > 10000 ? 0 : 1000;
+            const total = subtotal + deliveryFee;
+
+            document.getElementById('checkoutSubtotal').textContent = `₦${subtotal.toLocaleString()}`;
+            document.getElementById('checkoutDelivery').textContent = deliveryFee === 0 ? 'Free' : `₦${deliveryFee.toLocaleString()}`;
+            document.getElementById('checkoutTotal').textContent = `₦${total.toLocaleString()}`;
+        }
+
+        // Handle form submission with Paystack
+        document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Check if Paystack is loaded
+            if (typeof PaystackPop === 'undefined') {
+                showToast('Payment Error', 'Payment service not available. Please try again later.', '❌', 'error');
+                return;
+            }
+
+            // Get form values
+            const name = document.getElementById('fullName').value.trim();
+            const phone = document.getElementById('phoneNumber').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const state = document.getElementById('state').value.trim();
+            const instructions = document.getElementById('deliveryInstructions').value.trim();
+
+            // Validate
+            if (!name || !phone || !address || !city || !state) {
+                showToast('Missing Information', 'Please fill in all required fields.', '⚠️', 'error');
+                return;
+            }
+
+            const cart = getCart();
+            if (cart.length === 0) {
+                showToast('Cart Empty', 'Add some products before checking out.', '🛒', 'error');
+                return;
+            }
+
+            // Calculate totals
+            let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const deliveryFee = subtotal > 10000 ? 0 : 1000;
+            const total = subtotal + deliveryFee;
+
+            // Generate order number
+            const orderNumber = 'ORD-' + String(Date.now()).slice(-6);
+
+            // Build order data
+            const orderData = {
+                order_number: orderNumber,
+                customer_name: name,
+                customer_phone: phone,
+                customer_email: email || null,
+                delivery_address: `${address}, ${city}, ${state}`,
+                delivery_instructions: instructions || null,
+                items: cart,
+                subtotal: subtotal,
+                delivery_fee: deliveryFee,
+                total: total,
+                status: 'pending'
+            };
+
+            // Disable button
+            const btn = document.getElementById('placeOrderBtn');
+            btn.textContent = '⏳ Processing...';
+            btn.disabled = true;
+
+            try {
+                // 1. Save order to Supabase
+                const { data: orderResult, error: orderError } = await supabase
+                    .from('orders')
+                    .insert([orderData])
+                    .select();
+
+                if (orderError) {
+                    console.error('Error saving order:', orderError);
+                    showToast('Error', 'Failed to place order. Please try again.', '❌', 'error');
+                    btn.textContent = '💳 Pay Now';
+                    btn.disabled = false;
+                    return;
+                }
+
+                const orderId = orderResult[0].id;
+                console.log('Order saved:', orderResult);
+
+                // 2. Open Paystack payment popup
+                const paymentResult = await initializePayment(orderData, orderId);
+
+                // 3. Payment successful - Update order status
+                if (paymentResult.status === 'success') {
+                    // Update order status
+                    await supabase
+                        .from('orders')
+                        .update({ 
+                            status: 'processing',
+                            payment_reference: paymentResult.reference
+                        })
+                        .eq('id', orderId);
+
+                    // Clear cart (FIXED)
+                    clearCart();
+
+                    showToast(
+                        '🎉 Payment Successful!',
+                        `Thank you ${name}! Your order #${orderNumber} has been confirmed. We'll contact you soon.`,
+                        '💎',
+                        'success'
+                    );
+
+                    btn.textContent = '✅ Order Confirmed!';
+                    btn.style.background = '#2e7d32';
+                    btn.style.color = 'white';
+
+                    setTimeout(() => {
+                        window.location.href = 'shop.html';
+                    }, 5000);
+                }
+
+            } catch (error) {
+                if (error.status === 'cancelled') {
+                    showToast('Payment Cancelled', 'You cancelled the payment. Order is saved as pending.', '⏳', 'warning');
+                    btn.textContent = '💳 Pay Now';
+                    btn.disabled = false;
+                } else {
+                    console.error('Error:', error);
+                    showToast('Error', 'Payment failed. Please try again.', '❌', 'error');
+                    btn.textContent = '💳 Pay Now';
+                    btn.disabled = false;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
