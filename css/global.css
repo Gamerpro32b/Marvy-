@@ -1964,7 +1964,7 @@ p {
     border-radius: 50px;
     font-size: 0.75rem;
     font-weight: 600;
-    text-transform: uppercase;
+    text I'm-transform: uppercase;
 }
 
 .order-status.pending {
@@ -3400,7 +3400,7 @@ p {
         width: 120px;
         height: 120px;
     }
-
+}
 /* ============================================
    END OF FILE - WIDE LAYOUT
    ============================================ */
@@ -3459,7 +3459,97 @@ p {
         border-bottom: 1px solid rgba(232, 160, 184, 0.1);
     }
     
-    .nav-links li:last-child {
+        .nav-links li:last-child {
         border-bottom: none;
     }
+}  /* ← ADD THIS CLOSING BRACKET */
+
+/* ============================================
+   NO EMOJIS - CLEAN LUXURY TEXT
+   ============================================ */
+/* ============================================
+   NO EMOJIS - CLEAN LUXURY TEXT
+   ============================================ */
+
+/* Cart & Account in Navigation */
+.cart-icon,
+.account-icon {
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: var(--color-deep-rose);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.cart-icon:hover,
+.account-icon:hover {
+    color: var(--color-blush);
+}
+
+.cart-count {
+    background: var(--color-blush);
+    color: var(--color-white);
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 0.05rem 0.4rem;
+    border-radius: 50%;
+    margin-left: 0.2rem;
+}
+
+/* Social Links in Footer */
+.social-links {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.2rem;
+}
+
+.social-links a {
+    font-size: 0.8rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: var(--color-blush);
+}
+
+/* Contact in Footer */
+.footer-contact p {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 0.5rem;
+}
+
+.footer-contact a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-contact a:hover {
+    color: var(--color-blush);
+}
+.social-links a {
+    font-size: 0.75rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: var(--color-blush);
+}
+
+.social-links a:not(:last-child)::after {
+    content: '|';
+    margin-left: 1rem;
+    color: rgba(255,255,255,0.2);
 }
