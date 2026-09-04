@@ -27,18 +27,18 @@
                     <span class="logo-sub">Events &amp; More</span>
                 </a>
             </div>
-           <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="shop.html">Cakes</a></li>
-    <li><a href="custom-order.html">Custom Order</a></li>
-    <li><a href="delivery.html">Delivery</a></li>
-    <li><a href="index.html#about">About</a></li>
-</ul>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Cakes</a></li>
+                <li><a href="custom-order.html">Custom Order</a></li>
+                <li><a href="delivery.html">Delivery</a></li>
+                <li><a href="index.html#about">About</a></li>
+            </ul>
             <div class="nav-actions">
                 <a href="cart.html" class="cart-icon">
-    Cart <span class="cart-count">0</span>
-</a>
-<a href="#account" class="account-icon">Account</a>
+                    🛒 <span class="cart-count">0</span>
+                </a>
+                <a href="#account" class="account-icon">👤</a>
             </div>
             <button class="menu-toggle" aria-label="Toggle menu">☰</button>
         </div>
@@ -129,36 +129,38 @@
             <div class="footer-brand">
                 <h3>MARVY CAKES</h3>
                 <p>Premium cakes, hampers, food, surprises &amp; event decorations.</p>
-               <div class="social-links">
-    <a href="#">Instagram</a>
-    <a href="#">Facebook</a>
-    <a href="#">Twitter</a>
-    <a href="#">Pinterest</a>
-</div>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">Facebook</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Pinterest</a>
+                </div>
             </div>
             <div class="footer-links">
-                <h4>Quick Links</h4>
+                <h4>Explore</h4>
                 <ul>
-                    <li><a href="shop.html">Shop All</a></li>
-                    <li><a href="#">Cakes</a></li>
+                    <li><a href="shop.html">Cakes</a></li>
                     <li><a href="#">Hampers</a></li>
+                    <li><a href="#">Food</a></li>
                     <li><a href="#">Surprise Packages</a></li>
+                    <li><a href="#">Sign-out Packages</a></li>
+                    <li><a href="#">Event Decoration</a></li>
                 </ul>
             </div>
             <div class="footer-service">
-                <h4>Customer Service</h4>
+                <h4>Customer Care</h4>
                 <ul>
                     <li><a href="#">Contact Us</a></li>
                     <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Delivery Info</a></li>
+                    <li><a href="delivery.html">Delivery Info</a></li>
                     <li><a href="#">Returns</a></li>
                 </ul>
             </div>
             <div class="footer-contact">
                 <h4>Get in Touch</h4>
                 <p><a href="https://wa.me/2347048513759" target="_blank">WhatsApp: +234 704 851 3759</a></p>
-<p><a href="mailto:anighoromarvelous@gmail.com">anighoromarvelous@gmail.com</a></p>
-<p>Akungba Akoko, Nigeria</p>
+                <p><a href="mailto:anighoromarvelous@gmail.com">anighoromarvelous@gmail.com</a></p>
+                <p>Akungba Akoko, Nigeria</p>
             </div>
         </div>
         <div class="footer-bottom">
@@ -227,7 +229,79 @@
             document.getElementById('checkoutTotal').textContent = `₦${total.toLocaleString()}`;
         }
 
-        // Handle form submission with Paystack
+        // ============================================
+        // SAVE ORDER + SEND EMAIL NOTIFICATIONS
+        // ============================================
+        async function saveOrder(orderData) {
+            try {
+                // ============================================
+                // 1. SAVE ORDER TO SUPABASE
+                // ============================================
+                const { data, error } = await supabase
+                    .from('orders')
+                    .insert([orderData])
+                    .select()
+                    .single();
+
+                if (error) {
+                    console.error('❌ Error saving order:', error);
+                    return { error };
+                }
+
+                console.log('✅ Order saved successfully:', data);
+
+                // ============================================
+                // 2. PREPARE EMAIL PAYLOAD
+                // ============================================
+                const emailPayload = {
+                    order_number: data.order_number || orderData.order_number || '',
+                    customer_name: data.customer_name || orderData.customer_name || '',
+                    customer_phone: data.customer_phone || orderData.customer_phone || '',
+                    customer_email: data.customer_email || orderData.customer_email || '',
+                    delivery_address: data.delivery_address || orderData.delivery_address || '',
+                    delivery_instructions: data.delivery_instructions || orderData.delivery_instructions || '',
+                    total: Number(data.total || orderData.total || 0),
+                    items: orderData.items || cart.map(item => ({
+                        name: item.name || '',
+                        price: Number(item.price || 0),
+                        quantity: Number(item.quantity || 1)
+                    }))
+                };
+
+                console.log('📧 Sending order notification...', emailPayload);
+
+                // ============================================
+                // 3. CALL SUPABASE EDGE FUNCTION
+                // ============================================
+                const { data: emailResult, error: emailError } = await supabase.functions.invoke(
+                    'send-order-email',
+                    {
+                        body: emailPayload
+                    }
+                );
+
+                // ============================================
+                // 4. HANDLE EMAIL ERROR
+                // ============================================
+                if (emailError) {
+                    console.error('❌ Email notification failed:', emailError);
+                    // Order already saved, don't fail the checkout
+                    return { data, emailError };
+                }
+
+                console.log('✅ Email notification sent successfully:', emailResult);
+
+                return { data, emailResult };
+
+            } catch (error) {
+                console.error('❌ Unexpected error in saveOrder():', error);
+                return { error };
+            }
+        }
+
+        // ============================================
+        // HANDLE FORM SUBMISSION
+        // ============================================
         document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -287,27 +361,30 @@
             btn.disabled = true;
 
             try {
-                // 1. Save order to Supabase
-                const { data: orderResult, error: orderError } = await supabase
-                    .from('orders')
-                    .insert([orderData])
-                    .select();
+                // ============================================
+                // 1. SAVE ORDER AND SEND EMAIL
+                // ============================================
+                const result = await saveOrder(orderData);
 
-                if (orderError) {
-                    console.error('Error saving order:', orderError);
+                if (result.error) {
+                    console.error('Error saving order:', result.error);
                     showToast('Error', 'Failed to place order. Please try again.', '❌', 'error');
                     btn.textContent = '💳 Pay Now';
                     btn.disabled = false;
                     return;
                 }
 
-                const orderId = orderResult[0].id;
-                console.log('Order saved:', orderResult);
+                const orderId = result.data.id;
+                console.log('Order saved with ID:', orderId);
 
-                // 2. Open Paystack payment popup
+                // ============================================
+                // 2. OPEN PAYSTACK PAYMENT
+                // ============================================
                 const paymentResult = await initializePayment(orderData, orderId);
 
-                // 3. Payment successful - Update order status
+                // ============================================
+                // 3. PAYMENT SUCCESSFUL
+                // ============================================
                 if (paymentResult.status === 'success') {
                     // Update order status
                     await supabase
@@ -318,7 +395,7 @@
                         })
                         .eq('id', orderId);
 
-                    // Clear cart (FIXED)
+                    // Clear cart
                     clearCart();
 
                     showToast(
@@ -350,17 +427,6 @@
                 }
             }
         });
-        // ===== HAMBURGER MENU =====
-document.addEventListener('DOMContentLoaded', function() {
-    const toggle = document.querySelector('.menu-toggle');
-    const nav = document.querySelector('.nav-links');
-    
-    if (toggle && nav) {
-        toggle.addEventListener('click', function() {
-            nav.classList.toggle('active');
-        });
-    }
-});
     </script>
 </body>
-</html>
+    </html>
