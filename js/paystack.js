@@ -1,10 +1,15 @@
 // ============================================
-// WEALTH-NAILS - Paystack Payment Integration
+// MARVY CAKES - Paystack Payment Integration
 // ============================================
 
 // 🔑 PAYSTACK KEYS
-const PAYSTACK_PUBLIC_KEY = 'pk_test_63073c32c8b7d569bfd956607ff9589547bf507c';
-const PAYSTACK_SECRET_KEY = 'sk_test_9ed197b08b32acf4b7c52bd6c05e3faef99c60ba';
+// Public Key - Safe to expose in frontend (LIVE)
+const PAYSTACK_PUBLIC_KEY = 'pk_live_41f7818b5a45bf3b5b9addcd4c20e65f4beaf9e0';
+
+// Secret Key - Used for server-side verification
+// ⚠️ NEVER expose this in frontend! Only use in Edge Functions
+// This is just a placeholder - the actual secret key is stored in Supabase Secrets
+const PAYSTACK_SECRET_KEY = 'sk_live_b98ad13333ae3c231b159e705318feb10560b3d0';
 
 // ============================================
 // INITIALIZE PAYMENT
@@ -12,7 +17,17 @@ const PAYSTACK_SECRET_KEY = 'sk_test_9ed197b08b32acf4b7c52bd6c05e3faef99c60ba';
 
 function initializePayment(orderData, orderId) {
     return new Promise((resolve, reject) => {
-        const amount = orderData.total * 100;
+        // Calculate amount in kobo (Paystack uses smallest currency unit)
+        const amount = orderData.total * 100; // ₦ to kobo
+
+        // Check if Paystack is loaded
+        if (typeof PaystackPop === 'undefined') {
+            reject({
+                status: 'error',
+                message: 'Paystack not loaded. Please refresh and try again.'
+            });
+            return;
+        }
 
         const handler = PaystackPop.setup({
             key: PAYSTACK_PUBLIC_KEY,
@@ -22,12 +37,14 @@ function initializePayment(orderData, orderId) {
             ref: orderData.order_number,
             
             // ========================================
-            // 🔥 ONLY SHOW BANK TRANSFER & USSD
+            // ONLY SHOW BANK TRANSFER & USSD
             // ========================================
             channels: ['bank_transfer', 'ussd'],
             // ========================================
             
             callback: function(response) {
+                // Payment successful
+                console.log('✅ Payment successful:', response);
                 resolve({
                     status: 'success',
                     reference: response.reference,
@@ -36,6 +53,7 @@ function initializePayment(orderData, orderId) {
                 });
             },
             onClose: function() {
+                // Payment cancelled
                 reject({
                     status: 'cancelled',
                     message: 'Payment was cancelled'
@@ -48,11 +66,13 @@ function initializePayment(orderData, orderId) {
 }
 
 // ============================================
-// VERIFY PAYMENT
+// VERIFY PAYMENT (Server-side)
 // ============================================
 
 async function verifyPayment(reference) {
     try {
+        // This should be done on your server/backend
+        // For now, we'll simulate verification
         const response = await fetch(`https://api.paystack.co/transaction/verify/${reference}`, {
             method: 'GET',
             headers: {
