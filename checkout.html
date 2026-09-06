@@ -3,30 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Marvy Cakes - Checkout</title>
+
     <link rel="stylesheet" href="css/global.css">
-    <script src="https://js.paystack.co/v1/inline.js"></script>
-    <script>
-        // Check if Paystack loaded
-        if (typeof PaystackPop === 'undefined') {
-            console.warn('⚠️ Paystack not loaded, trying fallback...');
-            const script = document.createElement('script');
-            script.src = 'https://js.paystack.co/v1/inline.js';
-            document.head.appendChild(script);
-        }
+
+    <!-- Paystack SDK -->
+    <script
+        src="https://js.paystack.co/v1/inline.js"
+        onload="console.log('✅ Paystack SDK loaded successfully')"
+        onerror="console.error('❌ Paystack SDK failed to load')">
     </script>
+
+    <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+
 <body>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
+
             <div class="nav-logo">
                 <a href="index.html">
                     <span class="logo-text">MARVY CAKES</span>
                     <span class="logo-sub">Events &amp; More</span>
                 </a>
             </div>
+
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="shop.html">Cakes</a></li>
@@ -34,101 +39,207 @@
                 <li><a href="delivery.html">Delivery</a></li>
                 <li><a href="index.html#about">About</a></li>
             </ul>
+
             <div class="nav-actions">
                 <a href="cart.html" class="cart-icon">
                     🛒 <span class="cart-count">0</span>
                 </a>
+
                 <a href="#account" class="account-icon">👤</a>
             </div>
-            <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+
+            <button
+                class="menu-toggle"
+                aria-label="Toggle menu">
+                ☰
+            </button>
+
         </div>
     </nav>
 
     <!-- Main Content -->
     <main>
+
         <section class="page-header-luxury">
-            <h1>Secure <span class="gold-text">Checkout</span></h1>
+            <h1>
+                Secure
+                <span class="gold-text">Checkout</span>
+            </h1>
+
             <p>Complete your order</p>
+
             <div class="section-divider"></div>
         </section>
 
         <section class="checkout-container-luxury">
-            <form class="checkout-form" id="checkoutForm">
+
+            <form
+                class="checkout-form"
+                id="checkoutForm">
+
                 <!-- Customer Details -->
                 <div class="form-section-luxury">
+
                     <h3>Personal Details</h3>
+
                     <div class="form-group">
-                        <label>Full Name *</label>
-                        <input type="text" id="fullName" placeholder="Jane Doe" required>
+                        <label for="fullName">
+                            Full Name *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="fullName"
+                            placeholder="Jane Doe"
+                            required>
                     </div>
+
                     <div class="form-group">
-                        <label>Phone Number *</label>
-                        <input type="tel" id="phoneNumber" placeholder="080 1234 5678" required>
+                        <label for="phoneNumber">
+                            Phone Number *
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="phoneNumber"
+                            placeholder="080 1234 5678"
+                            required>
                     </div>
+
                     <div class="form-group">
-                        <label>Email Address</label>
-                        <input type="email" id="email" placeholder="jane@example.com">
+                        <label for="email">
+                            Email Address
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="jane@example.com">
                     </div>
+
                 </div>
 
                 <!-- Delivery Address -->
                 <div class="form-section-luxury">
+
                     <h3>Delivery Address</h3>
+
                     <div class="form-group">
-                        <label>Street Address *</label>
-                        <input type="text" id="address" placeholder="123 Main Street" required>
+                        <label for="address">
+                            Street Address *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="address"
+                            placeholder="123 Main Street"
+                            required>
                     </div>
+
                     <div class="form-row">
+
                         <div class="form-group">
-                            <label>City *</label>
-                            <input type="text" id="city" placeholder="Lagos" required>
+                            <label for="city">
+                                City *
+                            </label>
+
+                            <input
+                                type="text"
+                                id="city"
+                                placeholder="Lagos"
+                                required>
                         </div>
+
                         <div class="form-group">
-                            <label>State *</label>
-                            <input type="text" id="state" placeholder="Lagos" required>
+                            <label for="state">
+                                State *
+                            </label>
+
+                            <input
+                                type="text"
+                                id="state"
+                                placeholder="Lagos"
+                                required>
                         </div>
+
                     </div>
+
                     <div class="form-group">
-                        <label>Delivery Instructions</label>
-                        <textarea id="deliveryInstructions" placeholder="Gate code, landmark, etc." rows="2"></textarea>
+                        <label for="deliveryInstructions">
+                            Delivery Instructions
+                        </label>
+
+                        <textarea
+                            id="deliveryInstructions"
+                            placeholder="Gate code, landmark, etc."
+                            rows="2"></textarea>
                     </div>
+
                 </div>
 
                 <!-- Order Summary -->
                 <div class="form-section-luxury">
+
                     <h3>Order Summary</h3>
+
                     <div id="checkoutItems">
-                        <div class="loading">Loading cart...</div>
+                        <div class="loading">
+                            Loading cart...
+                        </div>
                     </div>
+
                     <div class="summary-row">
                         <span>Subtotal</span>
-                        <span id="checkoutSubtotal">₦0.00</span>
+                        <span id="checkoutSubtotal">
+                            ₦0.00
+                        </span>
                     </div>
+
                     <div class="summary-row">
                         <span>Delivery</span>
-                        <span id="checkoutDelivery">₦0.00</span>
+                        <span id="checkoutDelivery">
+                            ₦0.00
+                        </span>
                     </div>
+
                     <div class="summary-divider"></div>
+
                     <div class="summary-row total">
                         <span>Total</span>
-                        <span id="checkoutTotal">₦0.00</span>
+                        <span id="checkoutTotal">
+                            ₦0.00
+                        </span>
                     </div>
+
                 </div>
 
                 <!-- Payment Button -->
-                <button type="submit" class="btn-checkout-luxury" id="placeOrderBtn">
+                <button
+                    type="submit"
+                    class="btn-checkout-luxury"
+                    id="placeOrderBtn">
                     💳 Pay Now
                 </button>
+
             </form>
+
         </section>
+
     </main>
 
     <!-- Footer -->
     <footer class="footer">
+
         <div class="footer-container">
+
             <div class="footer-brand">
                 <h3>MARVY CAKES</h3>
-                <p>Premium cakes, hampers, food, surprises &amp; event decorations.</p>
+
+                <p>
+                    Premium cakes, hampers, food, surprises
+                    &amp; event decorations.
+                </p>
+
                 <div class="social-links">
                     <a href="#">Instagram</a>
                     <a href="#">Facebook</a>
@@ -136,8 +247,10 @@
                     <a href="#">Pinterest</a>
                 </div>
             </div>
+
             <div class="footer-links">
                 <h4>Explore</h4>
+
                 <ul>
                     <li><a href="shop.html">Cakes</a></li>
                     <li><a href="#">Hampers</a></li>
@@ -147,286 +260,573 @@
                     <li><a href="#">Event Decoration</a></li>
                 </ul>
             </div>
+
             <div class="footer-service">
                 <h4>Customer Care</h4>
+
                 <ul>
                     <li><a href="#">Contact Us</a></li>
                     <li><a href="#">FAQ</a></li>
-                    <li><a href="delivery.html">Delivery Info</a></li>
+                    <li>
+                        <a href="delivery.html">
+                            Delivery Info
+                        </a>
+                    </li>
                     <li><a href="#">Returns</a></li>
                 </ul>
             </div>
+
             <div class="footer-contact">
                 <h4>Get in Touch</h4>
-                <p><a href="https://wa.me/2347048513759" target="_blank">WhatsApp: +234 704 851 3759</a></p>
-                <p><a href="mailto:anighoromarvelous@gmail.com">anighoromarvelous@gmail.com</a></p>
-                <p>Akungba Akoko, Nigeria</p>
+
+                <p>
+                    <a
+                        href="https://wa.me/2347048513759"
+                        target="_blank"
+                        rel="noopener noreferrer">
+                        WhatsApp: +234 704 851 3759
+                    </a>
+                </p>
+
+                <p>
+                    <a href="mailto:anighoromarvelous@gmail.com">
+                        anighoromarvelous@gmail.com
+                    </a>
+                </p>
+
+                <p>
+                    Akungba Akoko, Nigeria
+                </p>
             </div>
+
         </div>
+
         <div class="footer-bottom">
-            <p>&copy; 2026 Marvy Cakes &amp; Events. All rights reserved.</p>
+            <p>
+                &copy; 2026 Marvy Cakes &amp; Events.
+                All rights reserved.
+            </p>
         </div>
+
     </footer>
 
-    <!-- JavaScript -->
+    <!-- Application JavaScript -->
     <script src="js/config.js"></script>
     <script src="js/supabase.js"></script>
     <script src="js/paystack.js"></script>
     <script src="js/utils.js"></script>
 
     <script>
-        // Load cart on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            loadCart();
-            displayCheckoutCart();
-            updateCartCount();
-            
-            // Check if Paystack loaded
-            if (typeof PaystackPop === 'undefined') {
-                console.error('❌ Paystack not loaded!');
-                document.getElementById('placeOrderBtn').textContent = '⚠️ Payment unavailable';
-                document.getElementById('placeOrderBtn').disabled = true;
-                document.getElementById('placeOrderBtn').style.opacity = '0.5';
-            } else {
-                console.log('✅ Paystack loaded successfully');
-            }
-        });
 
-        // Display cart in checkout
+        // ============================================
+        // PAGE INITIALIZATION
+        // ============================================
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            function() {
+                loadCart();
+                displayCheckoutCart();
+                updateCartCount();
+
+                const placeOrderButton =
+                    document.getElementById('placeOrderBtn');
+
+                if (
+                    typeof PaystackPop === 'undefined'
+                ) {
+                    console.error(
+                        '❌ Paystack not loaded!'
+                    );
+
+                    placeOrderButton.textContent =
+                        '⚠️ Payment unavailable';
+
+                    placeOrderButton.disabled = true;
+                    placeOrderButton.style.opacity = '0.5';
+                } else {
+                    console.log(
+                        '✅ Paystack loaded successfully'
+                    );
+                }
+            }
+        );
+
+        // ============================================
+        // DISPLAY CART
+        // ============================================
+
         function displayCheckoutCart() {
-            const container = document.getElementById('checkoutItems');
+            const container =
+                document.getElementById('checkoutItems');
+
             const cart = getCart();
 
             if (cart.length === 0) {
                 container.innerHTML = `
                     <div class="empty-checkout">
                         <p>Your cart is empty.</p>
-                        <a href="shop.html" class="btn-luxury-empty" style="margin-top:1rem;display:inline-block;">Shop Now →</a>
+
+                        <a
+                            href="shop.html"
+                            class="btn-luxury-empty"
+                            style="margin-top:1rem;display:inline-block;">
+                            Shop Now →
+                        </a>
                     </div>
                 `;
-                document.getElementById('placeOrderBtn').style.display = 'none';
+
+                document.getElementById(
+                    'placeOrderBtn'
+                ).style.display = 'none';
+
                 return;
             }
 
             let subtotal = 0;
 
-            container.innerHTML = cart.map(item => {
-                const itemTotal = item.price * item.quantity;
-                subtotal += itemTotal;
-                return `
-                    <div class="checkout-item-luxury">
-                        <span class="checkout-item-name">${item.name} × ${item.quantity}</span>
-                        <span class="checkout-item-price">₦${itemTotal.toLocaleString()}</span>
-                    </div>
-                `;
-            }).join('');
+            container.innerHTML = cart
+                .map(function(item) {
+                    const itemTotal =
+                        item.price * item.quantity;
 
-            const deliveryFee = subtotal > 10000 ? 0 : 1000;
-            const total = subtotal + deliveryFee;
+                    subtotal += itemTotal;
 
-            document.getElementById('checkoutSubtotal').textContent = `₦${subtotal.toLocaleString()}`;
-            document.getElementById('checkoutDelivery').textContent = deliveryFee === 0 ? 'Free' : `₦${deliveryFee.toLocaleString()}`;
-            document.getElementById('checkoutTotal').textContent = `₦${total.toLocaleString()}`;
+                    return `
+                        <div class="checkout-item-luxury">
+                            <span class="checkout-item-name">
+                                ${item.name} × ${item.quantity}
+                            </span>
+
+                            <span class="checkout-item-price">
+                                ₦${itemTotal.toLocaleString()}
+                            </span>
+                        </div>
+                    `;
+                })
+                .join('');
+
+            const deliveryFee =
+                subtotal > 10000 ? 0 : 1000;
+
+            const total =
+                subtotal + deliveryFee;
+
+            document.getElementById(
+                'checkoutSubtotal'
+            ).textContent =
+                `₦${subtotal.toLocaleString()}`;
+
+            document.getElementById(
+                'checkoutDelivery'
+            ).textContent =
+                deliveryFee === 0
+                    ? 'Free'
+                    : `₦${deliveryFee.toLocaleString()}`;
+
+            document.getElementById(
+                'checkoutTotal'
+            ).textContent =
+                `₦${total.toLocaleString()}`;
         }
+                // ============================================
+        // SAVE ORDER AND SEND EMAIL
+        // ============================================
 
-        // ============================================
-        // SAVE ORDER + SEND EMAIL NOTIFICATIONS
-        // ============================================
         async function saveOrder(orderData) {
             try {
-                // ============================================
-                // 1. SAVE ORDER TO SUPABASE
-                // ============================================
-                const { data, error } = await supabase
+                // Save order to Supabase
+                const {
+                    data,
+                    error
+                } = await supabase
                     .from('orders')
                     .insert([orderData])
                     .select()
                     .single();
 
                 if (error) {
-                    console.error('❌ Error saving order:', error);
-                    return { error };
+                    console.error(
+                        '❌ Error saving order:',
+                        error
+                    );
+
+                    return {
+                        error: error
+                    };
                 }
 
-                console.log('✅ Order saved successfully:', data);
+                console.log(
+                    '✅ Order saved successfully:',
+                    data
+                );
 
-                // ============================================
-                // 2. PREPARE EMAIL PAYLOAD
-                // ============================================
+                // Prepare email payload
                 const emailPayload = {
-                    order_number: data.order_number || orderData.order_number || '',
-                    customer_name: data.customer_name || orderData.customer_name || '',
-                    customer_phone: data.customer_phone || orderData.customer_phone || '',
-                    customer_email: data.customer_email || orderData.customer_email || '',
-                    delivery_address: data.delivery_address || orderData.delivery_address || '',
-                    delivery_instructions: data.delivery_instructions || orderData.delivery_instructions || '',
-                    total: Number(data.total || orderData.total || 0),
-                    items: orderData.items || cart.map(item => ({
-                        name: item.name || '',
-                        price: Number(item.price || 0),
-                        quantity: Number(item.quantity || 1)
-                    }))
+                    order_number:
+                        data.order_number ||
+                        orderData.order_number ||
+                        '',
+
+                    customer_name:
+                        data.customer_name ||
+                        orderData.customer_name ||
+                        '',
+
+                    customer_phone:
+                        data.customer_phone ||
+                        orderData.customer_phone ||
+                        '',
+
+                    customer_email:
+                        data.customer_email ||
+                        orderData.customer_email ||
+                        '',
+
+                    delivery_address:
+                        data.delivery_address ||
+                        orderData.delivery_address ||
+                        '',
+
+                    delivery_instructions:
+                        data.delivery_instructions ||
+                        orderData.delivery_instructions ||
+                        '',
+
+                    total: Number(
+                        data.total ||
+                        orderData.total ||
+                        0
+                    ),
+
+                    items:
+                        orderData.items ||
+                        []
                 };
 
-                console.log('📧 Sending order notification...', emailPayload);
+                console.log(
+                    '📧 Sending order notification...',
+                    emailPayload
+                );
 
-                // ============================================
-                // 3. CALL SUPABASE EDGE FUNCTION
-                // ============================================
-                const { data: emailResult, error: emailError } = await supabase.functions.invoke(
-                    'send-order-email',
+                // Call Send-order-email Edge Function
+                const {
+                    data: emailResult,
+                    error: emailError
+                } = await supabase.functions.invoke(
+                    'smart-worker',
                     {
                         body: emailPayload
                     }
                 );
 
-                // ============================================
-                // 4. HANDLE EMAIL ERROR
-                // ============================================
                 if (emailError) {
-                    console.error('❌ Email notification failed:', emailError);
-                    // Order already saved, don't fail the checkout
-                    return { data, emailError };
+                    console.error(
+                        '❌ Email notification failed:',
+                        emailError
+                    );
+
+                    // The order was already saved.
+                    // Do not block payment because email failed.
+                    return {
+                        data: data,
+                        emailError: emailError
+                    };
                 }
 
-                console.log('✅ Email notification sent successfully:', emailResult);
+                console.log(
+                    '✅ Email notification sent successfully:',
+                    emailResult
+                );
 
-                return { data, emailResult };
+                return {
+                    data: data,
+                    emailResult: emailResult
+                };
 
             } catch (error) {
-                console.error('❌ Unexpected error in saveOrder():', error);
-                return { error };
+                console.error(
+                    '❌ Unexpected error in saveOrder():',
+                    error
+                );
+
+                return {
+                    error: error
+                };
             }
         }
 
         // ============================================
-        // HANDLE FORM SUBMISSION
+        // HANDLE CHECKOUT SUBMISSION
         // ============================================
-        document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
 
-            // Check if Paystack is loaded
-            if (typeof PaystackPop === 'undefined') {
-                showToast('Payment Error', 'Payment service not available. Please try again later.', '❌', 'error');
-                return;
-            }
+        document
+            .getElementById('checkoutForm')
+            .addEventListener(
+                'submit',
+                async function(event) {
+                    event.preventDefault();
 
-            // Get form values
-            const name = document.getElementById('fullName').value.trim();
-            const phone = document.getElementById('phoneNumber').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const address = document.getElementById('address').value.trim();
-            const city = document.getElementById('city').value.trim();
-            const state = document.getElementById('state').value.trim();
-            const instructions = document.getElementById('deliveryInstructions').value.trim();
+                    // Check Paystack availability
+                    if (
+                        typeof PaystackPop === 'undefined'
+                    ) {
+                        showToast(
+                            'Payment Error',
+                            'Payment service not available. Please try again later.',
+                            '❌',
+                            'error'
+                        );
 
-            // Validate
-            if (!name || !phone || !address || !city || !state) {
-                showToast('Missing Information', 'Please fill in all required fields.', '⚠️', 'error');
-                return;
-            }
+                        return;
+                    }
 
-            const cart = getCart();
-            if (cart.length === 0) {
-                showToast('Cart Empty', 'Add some products before checking out.', '🛒', 'error');
-                return;
-            }
+                    // Get form values
+                    const name =
+                        document
+                            .getElementById('fullName')
+                            .value
+                            .trim();
 
-            // Calculate totals
-            let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const deliveryFee = subtotal > 10000 ? 0 : 1000;
-            const total = subtotal + deliveryFee;
+                    const phone =
+                        document
+                            .getElementById('phoneNumber')
+                            .value
+                            .trim();
 
-            // Generate order number
-            const orderNumber = 'ORD-' + String(Date.now()).slice(-6);
+                    const email =
+                        document
+                            .getElementById('email')
+                            .value
+                            .trim();
 
-            // Build order data
-            const orderData = {
-                order_number: orderNumber,
-                customer_name: name,
-                customer_phone: phone,
-                customer_email: email || null,
-                delivery_address: `${address}, ${city}, ${state}`,
-                delivery_instructions: instructions || null,
-                items: cart,
-                subtotal: subtotal,
-                delivery_fee: deliveryFee,
-                total: total,
-                status: 'pending'
-            };
+                    const address =
+                        document
+                            .getElementById('address')
+                            .value
+                            .trim();
 
-            // Disable button
-            const btn = document.getElementById('placeOrderBtn');
-            btn.textContent = '⏳ Processing...';
-            btn.disabled = true;
+                    const city =
+                        document
+                            .getElementById('city')
+                            .value
+                            .trim();
 
-            try {
-                // ============================================
-                // 1. SAVE ORDER AND SEND EMAIL
-                // ============================================
-                const result = await saveOrder(orderData);
+                    const state =
+                        document
+                            .getElementById('state')
+                            .value
+                            .trim();
 
-                if (result.error) {
-                    console.error('Error saving order:', result.error);
-                    showToast('Error', 'Failed to place order. Please try again.', '❌', 'error');
-                    btn.textContent = '💳 Pay Now';
-                    btn.disabled = false;
-                    return;
-                }
+                    const instructions =
+                        document
+                            .getElementById(
+                                'deliveryInstructions'
+                            )
+                            .value
+                            .trim();
 
-                const orderId = result.data.id;
-                console.log('Order saved with ID:', orderId);
+                    // Validate required fields
+                    if (
+                        !name ||
+                        !phone ||
+                        !address ||
+                        !city ||
+                        !state
+                    ) {
+                        showToast(
+                            'Missing Information',
+                            'Please fill in all required fields.',
+                            '⚠️',
+                            'error'
+                        );
 
-                // ============================================
-                // 2. OPEN PAYSTACK PAYMENT
-                // ============================================
-                const paymentResult = await initializePayment(orderData, orderId);
+                        return;
+                    }
 
-                // ============================================
-                // 3. PAYMENT SUCCESSFUL
-                // ============================================
-                if (paymentResult.status === 'success') {
-                    // Update order status
-                    await supabase
-                        .from('orders')
-                        .update({ 
-                            status: 'processing',
-                            payment_reference: paymentResult.reference
-                        })
-                        .eq('id', orderId);
+                    const cart = getCart();
 
-                    // Clear cart
-                    clearCart();
+                    if (cart.length === 0) {
+                        showToast(
+                            'Cart Empty',
+                            'Add some products before checking out.',
+                            '🛒',
+                            'error'
+                        );
 
-                    showToast(
-                        '🎉 Payment Successful!',
-                        `Thank you ${name}! Your order #${orderNumber} has been confirmed. We'll contact you soon.`,
-                        '💎',
-                        'success'
+                        return;
+                    }
+
+                    // Calculate totals
+                    const subtotal = cart.reduce(                        function(sum, item) {
+                            return sum +
+                                (
+                                    item.price *
+                                    item.quantity
+                                );
+                        },
+                        0
                     );
 
-                    btn.textContent = '✅ Order Confirmed!';
-                    btn.style.background = '#2e7d32';
-                    btn.style.color = 'white';
+                    const deliveryFee =
+                        subtotal > 10000
+                            ? 0
+                            : 1000;
 
-                    setTimeout(() => {
-                        window.location.href = 'shop.html';
-                    }, 5000);
-                }
+                    const total =
+                        subtotal + deliveryFee;
 
-            } catch (error) {
-                if (error.status === 'cancelled') {
-                    showToast('Payment Cancelled', 'You cancelled the payment. Order is saved as pending.', '⏳', 'warning');
-                    btn.textContent = '💳 Pay Now';
-                    btn.disabled = false;
-                } else {
-                    console.error('Error:', error);
-                    showToast('Error', 'Payment failed. Please try again.', '❌', 'error');
-                    btn.textContent = '💳 Pay Now';
-                    btn.disabled = false;
+                    // Generate order number
+                    const orderNumber =
+                        'ORD-' +
+                        String(Date.now()).slice(-6);
+
+                    // Build order data
+                    const orderData = {
+                        order_number: orderNumber,
+                        customer_name: name,
+                        customer_phone: phone,
+                        customer_email: email || null,
+                        delivery_address:
+                            `${address}, ${city}, ${state}`,
+                        delivery_instructions:
+                            instructions || null,
+                        items: cart,
+                        subtotal: subtotal,
+                        delivery_fee: deliveryFee,
+                        total: total,
+                        status: 'pending'
+                    };
+
+                    // Disable button
+                    const button =
+                        document.getElementById(
+                            'placeOrderBtn'
+                        );
+
+                    button.textContent =
+                        '⏳ Processing...';
+
+                    button.disabled = true;
+
+                    try {
+                        // Save order and send email
+                        const result =
+                            await saveOrder(orderData);
+
+                        if (result.error) {
+                            console.error(
+                                '❌ Error saving order:',
+                                result.error
+                            );
+
+                            showToast(
+                                'Error',
+                                'Failed to place order. Please try again.',
+                                '❌',
+                                'error'
+                            );
+
+                            button.textContent =
+                                '💳 Pay Now';
+
+                            button.disabled = false;
+
+                            return;
+                        }
+
+                        const orderId =
+                            result.data.id;
+
+                        console.log(
+                            'Order saved with ID:',
+                            orderId
+                        );
+
+                        // Open Paystack payment
+                        const paymentResult =
+                            await initializePayment(
+                                orderData,
+                                orderId
+                            );
+
+                        // Payment successful
+                        if (
+                            paymentResult.status ===
+                            'success'
+                        ) {
+                            // Update order status
+                            await supabase
+                                .from('orders')
+                                .update({
+                                    status: 'processing',
+                                    payment_reference:
+                                        paymentResult.reference
+                                })
+                                .eq('id', orderId);
+
+                            // Clear cart
+                            clearCart();
+
+                            showToast(
+                                '🎉 Payment Successful!',
+                                `Thank you ${name}! Your order #${orderNumber} has been confirmed. We'll contact you soon.`,
+                                '💎',
+                                'success'
+                            );
+
+                            button.textContent =
+                                '✅ Order Confirmed!';
+
+                            button.style.background =
+                                '#2e7d32';
+
+                            button.style.color =
+                                'white';
+
+                            setTimeout(
+                                function() {
+                                    window.location.href =
+                                        'shop.html';
+                                },
+                                5000
+                            );
+                        }
+
+                    } catch (error) {
+                        console.error(
+                            '❌ Checkout error:',
+                            error
+                        );
+
+                        if (
+                            error.status ===
+                            'cancelled'
+                        ) {
+                            showToast(
+                                'Payment Cancelled',
+                                'You cancelled the payment. Order is saved as pending.',
+                                '⏳',
+                                'warning'
+                            );
+                        } else {
+                            showToast(
+                                'Error',
+                                error.message ||
+                                    'Payment failed. Please try again.',
+                                '❌',
+                                'error'
+                            );
+                        }
+
+                        button.textContent =
+                            '💳 Pay Now';
+
+                        button.disabled = false;
+                    }
                 }
-            }
-        });
+            );
     </script>
+
 </body>
-    </html>
+</html>
