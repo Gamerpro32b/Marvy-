@@ -20,6 +20,52 @@
 </head>
 
 <body>
+    <script>
+    // Check if customer is logged in (with delay to ensure Supabase loads)
+    (function checkAuth() {
+        // Skip check on login, signup, forgot-password pages
+        const skipPages = ['login.html', 'signup.html', 'forgot-password.html', 'account.html'];
+        const currentPage = window.location.pathname.split('/').pop();
+        
+        if (skipPages.includes(currentPage)) {
+            return;
+        }
+
+        // Wait for Supabase to be available
+        if (typeof supabase === 'undefined') {
+            console.log('⏳ Waiting for Supabase to load...');
+            setTimeout(checkAuth, 300);
+            return;
+        }
+
+        // Also wait for auth to be ready
+        if (!supabase.auth) {
+            console.log('⏳ Waiting for Supabase auth...');
+            setTimeout(checkAuth, 300);
+            return;
+        }
+
+        // Check if user is logged in
+        supabase.auth.getSession()
+            .then(({ data: { session }, error }) => {
+                if (error) {
+                    console.error('Session check error:', error);
+                    return;
+                }
+
+                if (!session) {
+                    // Not logged in - redirect to login
+                    const currentUrl = window.location.href;
+                    window.location.href = `login.html?redirect=${encodeURIComponent(currentUrl)}`;
+                } else {
+                    console.log('✅ User is logged in:', session.user.email);
+                }
+            })
+            .catch(error => {
+                console.error('Auth check error:', error);
+            });
+    })();
+</script>
 
     <!-- Navigation -->
     <nav class="navbar">
@@ -45,7 +91,7 @@
                     🛒 <span class="cart-count">0</span>
                 </a>
 
-                <a href="#account" class="account-icon">👤</a>
+                <a href="login.html" class="account-icon">👤</a>
             </div>
 
             <button

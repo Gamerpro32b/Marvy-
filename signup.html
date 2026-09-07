@@ -109,7 +109,28 @@
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script>
-        // Password strength
+        // ===== HANDLE REDIRECT =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectUrl = urlParams.get('redirect');
+            if (redirectUrl) {
+                sessionStorage.setItem('signupRedirect', redirectUrl);
+            }
+        });
+
+        // ===== TOGGLE PASSWORD VISIBILITY =====
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = 'Hide';
+            } else {
+                input.type = 'password';
+                btn.textContent = 'Show';
+            }
+        }
+
+        // ===== PASSWORD STRENGTH =====
         document.getElementById('signupPassword').addEventListener('input', function() {
             const password = this.value;
             const el = document.getElementById('passwordStrength');
@@ -133,7 +154,7 @@
             el.style.color = colors[strength - 1] || '#c62828';
         });
 
-        // Password match
+        // ===== PASSWORD MATCH =====
         document.getElementById('signupConfirm').addEventListener('input', function() {
             const password = document.getElementById('signupPassword').value;
             const confirm = this.value;
@@ -153,7 +174,7 @@
             }
         });
 
-        // Handle Sign Up
+        // ===== HANDLE SIGN UP =====
         document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -210,8 +231,17 @@
                 if (result.data?.session) {
                     successEl.textContent = '✅ Account created! Redirecting...';
                     successEl.style.display = 'block';
+                    
+                    // Check for redirect URL
+                    const redirectUrl = sessionStorage.getItem('signupRedirect');
+                    sessionStorage.removeItem('signupRedirect');
+
                     setTimeout(() => {
-                        window.location.href = 'account.html';
+                        if (redirectUrl) {
+                            window.location.href = redirectUrl;
+                        } else {
+                            window.location.href = 'account.html';
+                        }
                     }, 1500);
                 } else {
                     successEl.innerHTML = `✅ Account created!<br><small>Please check your email (${email}) to confirm your account.</small>`;
@@ -228,17 +258,6 @@
                 btn.disabled = false;
             }
         });
-
-        function togglePassword(inputId, btn) {
-            const input = document.getElementById(inputId);
-            if (input.type === 'password') {
-                input.type = 'text';
-                btn.textContent = 'Hide';
-            } else {
-                input.type = 'password';
-                btn.textContent = 'Show';
-            }
-        }
     </script>
 </body>
 </html>

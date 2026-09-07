@@ -14,20 +14,13 @@
 
         <!-- ====== BACKGROUND LAYER ====== -->
         <div class="auth-bg">
-            <!-- Base gradient -->
             <div class="auth-bg-gradient"></div>
-
-            <!-- Atmospheric lighting -->
             <div class="auth-bg-light light-1"></div>
             <div class="auth-bg-light light-2"></div>
             <div class="auth-bg-light light-3"></div>
-
-            <!-- Curved organic shapes -->
             <div class="auth-bg-shape curve-1"></div>
             <div class="auth-bg-shape curve-2"></div>
             <div class="auth-bg-shape curve-3"></div>
-
-            <!-- Subtle texture overlay -->
             <div class="auth-bg-texture"></div>
         </div>
 
@@ -97,12 +90,36 @@
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script>
+        // ===== HANDLE REDIRECT =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // If there's a redirect parameter, store it
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectUrl = urlParams.get('redirect');
+            if (redirectUrl) {
+                sessionStorage.setItem('loginRedirect', redirectUrl);
+            }
+        });
+
+        // ===== TOGGLE PASSWORD VISIBILITY =====
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = 'Hide';
+            } else {
+                input.type = 'password';
+                btn.textContent = 'Show';
+            }
+        }
+
+        // ===== HANDLE LOGIN =====
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
             const errorEl = document.getElementById('loginError');
+            const rememberMe = document.getElementById('rememberMe').checked;
 
             errorEl.style.display = 'none';
             errorEl.textContent = '';
@@ -128,7 +145,15 @@
                     return;
                 }
 
-                window.location.href = 'account.html';
+                // Check for redirect URL
+                const redirectUrl = sessionStorage.getItem('loginRedirect');
+                sessionStorage.removeItem('loginRedirect');
+
+                if (redirectUrl) {
+                    window.location.href = redirectUrl;
+                } else {
+                    window.location.href = 'account.html';
+                }
 
             } catch (error) {
                 console.error('Login error:', error);
@@ -138,17 +163,6 @@
                 btn.disabled = false;
             }
         });
-
-        function togglePassword(inputId, btn) {
-            const input = document.getElementById(inputId);
-            if (input.type === 'password') {
-                input.type = 'text';
-                btn.textContent = 'Hide';
-            } else {
-                input.type = 'password';
-                btn.textContent = 'Show';
-            }
-        }
     </script>
 </body>
-</html>
+</html>A
