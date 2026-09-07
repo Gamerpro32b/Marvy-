@@ -126,18 +126,30 @@ async function customerLogout() {
 }
 
 // ============================================
-// GET CUSTOMER ORDERS
+// GET CUSTOMER ORDERS (BY USER ID OR EMAIL)
 // ============================================
 
 async function getCustomerOrders(email) {
     try {
         if (!email) return [];
 
-        const { data, error } = await supabase
+        // First try to get orders by user_id (for logged-in users)
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        let query = supabase
             .from('orders')
             .select('*')
-            .eq('customer_email', email)
             .order('created_at', { ascending: false });
+
+        if (session) {
+            // If logged in, get orders by user_id
+            query = query.eq('user_id', session.user.id);
+        } else {
+            // Fallback to email for guest orders
+            query = query.eq('customer_email', email);
+        }
+
+        const { data, error } = await query;
 
         if (error) {
             console.error('Get orders error:', error);
@@ -217,6 +229,32 @@ async function updatePassword(newPassword) {
     } catch (error) {
         console.error('Update password error:', error);
         return { error };
+    }
+}
+
+// ============================================
+// GET USER ORDERS BY USER ID (For logged-in users)
+// ============================================
+
+async function getUserOrdersByUserId(userId) {
+    try {
+        if (!userId) return [];
+
+        const { data, error } = await supabase
+            .from('orders')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Get user orders error:', error);
+            return [];
+        }
+
+        return data || [];
+    } catch (error) {
+        console.error('Get user orders error:', error);
+        return [];
     }
 }
 

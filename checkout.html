@@ -728,22 +728,31 @@
                         String(Date.now()).slice(-6);
 
                     // Build order data
-                    const orderData = {
-                        order_number: orderNumber,
-                        customer_name: name,
-                        customer_phone: phone,
-                        customer_email: email || null,
-                        delivery_address:
-                            `${address}, ${city}, ${state}`,
-                        delivery_instructions:
-                            instructions || null,
-                        items: cart,
-                        subtotal: subtotal,
-                        delivery_fee: deliveryFee,
-                        total: total,
-                        status: 'pending'
-                    };
+                    // Get current user session
+let userId = null;
+try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+        userId = session.user.id;
+    }
+} catch (e) {
+    console.log('No user logged in');
+}
 
+const orderData = {
+    order_number: orderNumber,
+    customer_name: name,
+    customer_phone: phone,
+    customer_email: email || null,
+    delivery_address: `${address}, ${city}, ${state}`,
+    delivery_instructions: instructions || null,
+    items: cart,
+    subtotal: subtotal,
+    delivery_fee: deliveryFee,
+    total: total,
+    status: 'pending',
+    user_id: userId  // ✅ Add this line
+};
                     // Disable button
                     const button =
                         document.getElementById(

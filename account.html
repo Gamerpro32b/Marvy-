@@ -105,6 +105,7 @@
             const container = document.getElementById('accountContainer');
             
             try {
+                // Check if user is logged in
                 const session = await getCustomerSession();
                 
                 if (!session) {
@@ -123,20 +124,27 @@
                 }
 
                 const user = session.user;
+                
+                // Get orders using the updated function (by user_id)
                 const orders = await getCustomerOrders(user.email) || [];
 
                 container.innerHTML = `
                     <div class="account-dashboard">
+                        <!-- Profile Card -->
                         <div class="account-profile-card">
                             <div class="account-profile-avatar">${user.email ? user.email.charAt(0).toUpperCase() : '👤'}</div>
                             <div class="account-profile-info">
-                                <h3>${user.email || 'Customer'}</h3>
+                                <h3>${user.user_metadata?.full_name || user.email}</h3>
                                 <p>${user.email}</p>
                                 <span class="account-status">✅ Verified</span>
                             </div>
-                            <button class="btn-secondary account-logout-btn" id="logoutBtn">🚪 Logout</button>
+                            <div class="account-profile-actions">
+                                <a href="profile.html" class="btn-secondary" style="padding:0.5rem 1.5rem;font-size:0.85rem;">✏️ Edit Profile</a>
+                                <button class="btn-secondary account-logout-btn" id="logoutBtn" style="padding:0.5rem 1.5rem;font-size:0.85rem;">🚪 Logout</button>
+                            </div>
                         </div>
 
+                        <!-- Stats -->
                         <div class="account-stats-grid">
                             <div class="account-stat-card">
                                 <span class="stat-number">${orders.length}</span>
@@ -156,6 +164,7 @@
                             </div>
                         </div>
 
+                        <!-- Recent Orders -->
                         <div class="account-orders-section">
                             <h3>Recent Orders</h3>
                             ${orders.length > 0 ? `
@@ -182,6 +191,7 @@
                     </div>
                 `;
 
+                // Logout button
                 document.getElementById('logoutBtn').addEventListener('click', async function() {
                     if (confirm('Are you sure you want to logout?')) {
                         const result = await customerLogout();
