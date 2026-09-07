@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvy Cakes - Login</title>
+    <link rel="stylesheet" href="css/global.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <!-- ====== AUTHENTICATION COMPOSITION ====== -->
+    <div class="auth-composition">
+
+        <!-- ====== BACKGROUND LAYER ====== -->
+        <div class="auth-bg">
+            <!-- Base gradient -->
+            <div class="auth-bg-gradient"></div>
+
+            <!-- Atmospheric lighting -->
+            <div class="auth-bg-light light-1"></div>
+            <div class="auth-bg-light light-2"></div>
+            <div class="auth-bg-light light-3"></div>
+
+            <!-- Curved organic shapes -->
+            <div class="auth-bg-shape curve-1"></div>
+            <div class="auth-bg-shape curve-2"></div>
+            <div class="auth-bg-shape curve-3"></div>
+
+            <!-- Subtle texture overlay -->
+            <div class="auth-bg-texture"></div>
+        </div>
+
+        <!-- ====== GLASS PANEL ====== -->
+        <div class="auth-glass-panel">
+
+            <!-- Brand -->
+            <div class="auth-brand">
+                <span class="auth-brand-main">MARVY CAKES</span>
+                <span class="auth-brand-sub">Events &amp; More</span>
+            </div>
+
+            <!-- Heading -->
+            <div class="auth-heading">
+                <h1>Welcome Back</h1>
+                <p>Sign in to continue to your account</p>
+            </div>
+
+            <!-- Form -->
+            <form class="auth-form" id="loginForm">
+
+                <!-- Email -->
+                <div class="auth-field">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="jane@example.com" required autocomplete="email">
+                    <span class="auth-field-line"></span>
+                </div>
+
+                <!-- Password -->
+                <div class="auth-field">
+                    <label for="loginPassword">Password</label>
+                    <div class="auth-password-wrapper">
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password">
+                        <button type="button" class="auth-password-toggle" onclick="togglePassword('loginPassword', this)">Show</button>
+                    </div>
+                    <span class="auth-field-line"></span>
+                </div>
+
+                <!-- Options -->
+                <div class="auth-options">
+                    <label class="auth-remember">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="forgot-password.html" class="auth-forgot">Forgot password?</a>
+                </div>
+
+                <!-- Error -->
+                <div id="loginError" class="auth-error" style="display:none;"></div>
+
+                <!-- Button -->
+                <button type="submit" class="auth-btn" id="loginBtn">
+                    Sign In
+                </button>
+
+                <!-- Switch -->
+                <p class="auth-switch">
+                    Don't have an account? <a href="signup.html">Create one</a>
+                </p>
+
+            </form>
+        </div>
+
+    </div>
+
+    <!-- ====== JAVASCRIPT ====== -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const errorEl = document.getElementById('loginError');
+
+            errorEl.style.display = 'none';
+            errorEl.textContent = '';
+
+            if (!email || !password) {
+                errorEl.textContent = 'Please fill in all fields.';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            const btn = document.getElementById('loginBtn');
+            btn.textContent = '⏳ Signing in...';
+            btn.disabled = true;
+
+            try {
+                const result = await customerLogin(email, password);
+
+                if (result.error) {
+                    errorEl.textContent = result.error.message || 'Invalid email or password.';
+                    errorEl.style.display = 'block';
+                    btn.textContent = 'Sign In';
+                    btn.disabled = false;
+                    return;
+                }
+
+                window.location.href = 'account.html';
+
+            } catch (error) {
+                console.error('Login error:', error);
+                errorEl.textContent = 'Something went wrong. Please try again.';
+                errorEl.style.display = 'block';
+                btn.textContent = 'Sign In';
+                btn.disabled = false;
+            }
+        });
+
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = 'Hide';
+            } else {
+                input.type = 'password';
+                btn.textContent = 'Show';
+            }
+        }
+    </script>
+</body>
+</html>

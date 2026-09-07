@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvy Cakes - Sign Up</title>
+    <link rel="stylesheet" href="css/global.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <!-- ====== AUTHENTICATION COMPOSITION ====== -->
+    <div class="auth-composition">
+
+        <!-- ====== BACKGROUND LAYER ====== -->
+        <div class="auth-bg">
+            <div class="auth-bg-gradient"></div>
+            <div class="auth-bg-light light-1"></div>
+            <div class="auth-bg-light light-2"></div>
+            <div class="auth-bg-light light-3"></div>
+            <div class="auth-bg-shape curve-1"></div>
+            <div class="auth-bg-shape curve-2"></div>
+            <div class="auth-bg-shape curve-3"></div>
+            <div class="auth-bg-texture"></div>
+        </div>
+
+        <!-- ====== GLASS PANEL ====== -->
+        <div class="auth-glass-panel">
+
+            <!-- Brand -->
+            <div class="auth-brand">
+                <span class="auth-brand-main">MARVY CAKES</span>
+                <span class="auth-brand-sub">Events &amp; More</span>
+            </div>
+
+            <!-- Heading -->
+            <div class="auth-heading">
+                <h1>Create Your Account</h1>
+                <p>Join Marvy Cakes and start ordering</p>
+            </div>
+
+            <!-- Form -->
+            <form class="auth-form" id="signupForm">
+
+                <!-- Name -->
+                <div class="auth-field">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" placeholder="Jane Doe" required autocomplete="name">
+                    <span class="auth-field-line"></span>
+                </div>
+
+                <!-- Email -->
+                <div class="auth-field">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" placeholder="jane@example.com" required autocomplete="email">
+                    <span class="auth-field-line"></span>
+                </div>
+
+                <!-- Password -->
+                <div class="auth-field">
+                    <label for="signupPassword">Password</label>
+                    <div class="auth-password-wrapper">
+                        <input type="password" id="signupPassword" placeholder="Create a password" required autocomplete="new-password">
+                        <button type="button" class="auth-password-toggle" onclick="togglePassword('signupPassword', this)">Show</button>
+                    </div>
+                    <span class="auth-field-line"></span>
+                    <div id="passwordStrength" class="auth-strength"></div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="auth-field">
+                    <label for="signupConfirm">Confirm Password</label>
+                    <div class="auth-password-wrapper">
+                        <input type="password" id="signupConfirm" placeholder="Confirm your password" required autocomplete="new-password">
+                        <button type="button" class="auth-password-toggle" onclick="togglePassword('signupConfirm', this)">Show</button>
+                    </div>
+                    <span class="auth-field-line"></span>
+                    <div id="passwordMatch" class="auth-match"></div>
+                </div>
+
+                <!-- Terms -->
+                <div class="auth-terms">
+                    <label>
+                        <input type="checkbox" id="termsCheck" required>
+                        <span>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+                    </label>
+                </div>
+
+                <!-- Error / Success -->
+                <div id="signupError" class="auth-error" style="display:none;"></div>
+                <div id="signupSuccess" class="auth-success" style="display:none;"></div>
+
+                <!-- Button -->
+                <button type="submit" class="auth-btn" id="signupBtn">
+                    Create Account
+                </button>
+
+                <!-- Switch -->
+                <p class="auth-switch">
+                    Already have an account? <a href="login.html">Sign in</a>
+                </p>
+
+            </form>
+        </div>
+
+    </div>
+
+    <!-- ====== JAVASCRIPT ====== -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Password strength
+        document.getElementById('signupPassword').addEventListener('input', function() {
+            const password = this.value;
+            const el = document.getElementById('passwordStrength');
+
+            if (password.length === 0) {
+                el.textContent = '';
+                return;
+            }
+
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+            const labels = ['Weak', 'Weak', 'Fair', 'Good', 'Strong'];
+            const colors = ['#c62828', '#e65100', '#f57c00', '#2e7d32', '#1b5e20'];
+
+            el.textContent = labels[strength - 1] || 'Weak';
+            el.style.color = colors[strength - 1] || '#c62828';
+        });
+
+        // Password match
+        document.getElementById('signupConfirm').addEventListener('input', function() {
+            const password = document.getElementById('signupPassword').value;
+            const confirm = this.value;
+            const el = document.getElementById('passwordMatch');
+
+            if (confirm.length === 0) {
+                el.textContent = '';
+                return;
+            }
+
+            if (password === confirm) {
+                el.textContent = '✅ Passwords match';
+                el.style.color = '#2e7d32';
+            } else {
+                el.textContent = '❌ Passwords do not match';
+                el.style.color = '#c62828';
+            }
+        });
+
+        // Handle Sign Up
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const confirm = document.getElementById('signupConfirm').value;
+            const terms = document.getElementById('termsCheck').checked;
+            const errorEl = document.getElementById('signupError');
+            const successEl = document.getElementById('signupSuccess');
+
+            errorEl.style.display = 'none';
+            successEl.style.display = 'none';
+
+            if (!name || !email || !password || !confirm) {
+                errorEl.textContent = 'Please fill in all fields.';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            if (password !== confirm) {
+                errorEl.textContent = 'Passwords do not match.';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            if (password.length < 8) {
+                errorEl.textContent = 'Password must be at least 8 characters.';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            if (!terms) {
+                errorEl.textContent = 'Please agree to the Terms of Service.';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            const btn = document.getElementById('signupBtn');
+            btn.textContent = '⏳ Creating account...';
+            btn.disabled = true;
+
+            try {
+                const result = await customerSignUp(email, password, name);
+
+                if (result.error) {
+                    errorEl.textContent = result.error.message || 'Something went wrong.';
+                    errorEl.style.display = 'block';
+                    btn.textContent = 'Create Account';
+                    btn.disabled = false;
+                    return;
+                }
+
+                if (result.data?.session) {
+                    successEl.textContent = '✅ Account created! Redirecting...';
+                    successEl.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = 'account.html';
+                    }, 1500);
+                } else {
+                    successEl.innerHTML = `✅ Account created!<br><small>Please check your email (${email}) to confirm your account.</small>`;
+                    successEl.style.display = 'block';
+                    btn.textContent = '✅ Check Your Email';
+                    btn.disabled = true;
+                }
+
+            } catch (error) {
+                console.error('Signup error:', error);
+                errorEl.textContent = 'Something went wrong. Please try again.';
+                errorEl.style.display = 'block';
+                btn.textContent = 'Create Account';
+                btn.disabled = false;
+            }
+        });
+
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = 'Hide';
+            } else {
+                input.type = 'password';
+                btn.textContent = 'Show';
+            }
+        }
+    </script>
+</body>
+</html>

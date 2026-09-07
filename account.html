@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvy Cakes - My Account</title>
+    <link rel="stylesheet" href="css/global.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <span class="logo-text">MARVY CAKES</span>
+                    <span class="logo-sub">Events &amp; More</span>
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Cakes</a></li>
+                <li><a href="custom-order.html">Custom Order</a></li>
+                <li><a href="delivery.html">Delivery</a></li>
+                <li><a href="index.html#about">About</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="cart.html" class="cart-icon">
+                    🛒 <span class="cart-count">0</span>
+                </a>
+                <a href="account.html" class="account-icon active">👤 My Account</a>
+            </div>
+            <button class="menu-toggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <section class="page-header-luxury">
+            <h1>My <span class="gold-text">Account</span></h1>
+            <p>Manage your profile, orders, and preferences</p>
+            <div class="section-divider"></div>
+        </section>
+
+        <section class="account-container" id="accountContainer">
+            <div class="account-loading">
+                <p>✨ Loading account...</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>MARVY CAKES</h3>
+                <p>Premium cakes, hampers, food, surprises &amp; event decorations.</p>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">Facebook</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Pinterest</a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Explore</h4>
+                <ul>
+                    <li><a href="shop.html">Cakes</a></li>
+                    <li><a href="#">Hampers</a></li>
+                    <li><a href="#">Food</a></li>
+                    <li><a href="#">Surprise Packages</a></li>
+                    <li><a href="#">Sign-out Packages</a></li>
+                    <li><a href="#">Event Decoration</a></li>
+                </ul>
+            </div>
+            <div class="footer-service">
+                <h4>Customer Care</h4>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="delivery.html">Delivery Info</a></li>
+                    <li><a href="#">Returns</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Get in Touch</h4>
+                <p><a href="https://wa.me/2347048513759" target="_blank">WhatsApp: +234 704 851 3759</a></p>
+                <p><a href="mailto:anighoromarvelous@gmail.com">anighoromarvelous@gmail.com</a></p>
+                <p>Akungba Akoko, Nigeria</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Marvy Cakes &amp; Events. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/utils.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const container = document.getElementById('accountContainer');
+            
+            try {
+                const session = await getCustomerSession();
+                
+                if (!session) {
+                    container.innerHTML = `
+                        <div class="account-login-prompt">
+                            <div class="account-prompt-icon">🔒</div>
+                            <h2>Please Sign In</h2>
+                            <p>Sign in to view your account details and order history.</p>
+                            <div class="account-prompt-buttons">
+                                <a href="login.html" class="btn-primary">Sign In</a>
+                                <a href="signup.html" class="btn-secondary">Create Account</a>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const user = session.user;
+                const orders = await getCustomerOrders(user.email) || [];
+
+                container.innerHTML = `
+                    <div class="account-dashboard">
+                        <div class="account-profile-card">
+                            <div class="account-profile-avatar">${user.email ? user.email.charAt(0).toUpperCase() : '👤'}</div>
+                            <div class="account-profile-info">
+                                <h3>${user.email || 'Customer'}</h3>
+                                <p>${user.email}</p>
+                                <span class="account-status">✅ Verified</span>
+                            </div>
+                            <button class="btn-secondary account-logout-btn" id="logoutBtn">🚪 Logout</button>
+                        </div>
+
+                        <div class="account-stats-grid">
+                            <div class="account-stat-card">
+                                <span class="stat-number">${orders.length}</span>
+                                <span class="stat-label">Total Orders</span>
+                            </div>
+                            <div class="account-stat-card">
+                                <span class="stat-number">${orders.filter(o => o.status === 'pending').length}</span>
+                                <span class="stat-label">Pending</span>
+                            </div>
+                            <div class="account-stat-card">
+                                <span class="stat-number">${orders.filter(o => o.status === 'processing').length}</span>
+                                <span class="stat-label">Processing</span>
+                            </div>
+                            <div class="account-stat-card">
+                                <span class="stat-number">${orders.filter(o => o.status === 'completed').length}</span>
+                                <span class="stat-label">Completed</span>
+                            </div>
+                        </div>
+
+                        <div class="account-orders-section">
+                            <h3>Recent Orders</h3>
+                            ${orders.length > 0 ? `
+                                <div class="account-orders-list">
+                                    ${orders.slice(0, 5).map(order => `
+                                        <div class="account-order-item">
+                                            <div class="order-info">
+                                                <span class="order-number">#${order.order_number}</span>
+                                                <span class="order-date">${new Date(order.created_at).toLocaleDateString()}</span>
+                                            </div>
+                                            <div class="order-info">
+                                                <span class="order-total">₦${order.total.toLocaleString()}</span>
+                                                <span class="order-status ${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                ${orders.length > 5 ? `<p class="account-view-all"><a href="#">View all orders →</a></p>` : ''}
+                            ` : `
+                                <p class="account-no-orders">You haven't placed any orders yet.</p>
+                                <a href="shop.html" class="btn-primary">Start Shopping</a>
+                            `}
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('logoutBtn').addEventListener('click', async function() {
+                    if (confirm('Are you sure you want to logout?')) {
+                        const result = await customerLogout();
+                        if (result.error) {
+                            showToast('Error', 'Logout failed. Please try again.', '❌', 'error');
+                        } else {
+                            window.location.href = 'login.html';
+                        }
+                    }
+                });
+
+            } catch (error) {
+                console.error('Account error:', error);
+                container.innerHTML = `
+                    <div class="account-error">
+                        <p>❌ Error loading account. Please refresh and try again.</p>
+                        <a href="login.html" class="btn-primary">Go to Login</a>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
