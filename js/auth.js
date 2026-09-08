@@ -2,6 +2,8 @@
 // MARVY CAKES - Customer Authentication
 // ============================================
 
+console.log('✅ auth.js loaded!');
+
 // ============================================
 // GET CURRENT SESSION
 // ============================================
@@ -47,6 +49,23 @@ async function getCurrentUser() {
         return user;
     } catch (error) {
         console.error('Get user error:', error);
+        return null;
+    }
+}
+
+// ============================================
+// GET CURRENT USER EMAIL
+// ============================================
+
+async function getCurrentUserEmail() {
+    try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session && session.user) {
+            return session.user.email;
+        }
+        return null;
+    } catch (error) {
+        console.error('Get user email error:', error);
         return null;
     }
 }
@@ -126,7 +145,7 @@ async function customerLogout() {
 }
 
 // ============================================
-// GET CUSTOMER ORDERS (BY USER ID OR EMAIL)
+// GET CUSTOMER ORDERS BY EMAIL
 // ============================================
 
 async function getCustomerOrders(email) {
@@ -164,6 +183,32 @@ async function getCustomerOrders(email) {
 }
 
 // ============================================
+// GET USER ORDERS BY USER ID
+// ============================================
+
+async function getUserOrdersByUserId(userId) {
+    try {
+        if (!userId) return [];
+
+        const { data, error } = await supabase
+            .from('orders')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Get user orders error:', error);
+            return [];
+        }
+
+        return data || [];
+    } catch (error) {
+        console.error('Get user orders error:', error);
+        return [];
+    }
+}
+
+// ============================================
 // UPDATE CUSTOMER PROFILE
 // ============================================
 
@@ -182,6 +227,29 @@ async function updateCustomerProfile(updates) {
         return { data };
     } catch (error) {
         console.error('Update profile error:', error);
+        return { error };
+    }
+}
+
+// ============================================
+// UPDATE USER METADATA
+// ============================================
+
+async function updateUserMetadata(metadata) {
+    try {
+        const { data, error } = await supabase.auth.updateUser({
+            data: metadata
+        });
+
+        if (error) {
+            console.error('Update metadata error:', error);
+            return { error };
+        }
+
+        console.log('✅ Metadata updated:', data);
+        return { data };
+    } catch (error) {
+        console.error('Update metadata error:', error);
         return { error };
     }
 }
@@ -233,29 +301,101 @@ async function updatePassword(newPassword) {
 }
 
 // ============================================
-// GET USER ORDERS BY USER ID (For logged-in users)
+// GET USER BY ID
 // ============================================
 
-async function getUserOrdersByUserId(userId) {
+async function getUserById(userId) {
+    try {
+        const { data, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', userId)
+            .single();
+
+        if (error) {
+            console.error('Get user by ID error:', error);
+            return null;
+        }
+
+        return data;
+    } catch (error) {
+        console.error('Get user by ID error:', error);
+        return null;
+    }
+}
+
+// ============================================
+// GET USER ORDERS WITH DETAILS
+// ============================================
+
+async function getUserOrdersWithDetails(userId) {
     try {
         if (!userId) return [];
 
         const { data, error } = await supabase
             .from('orders')
-            .select('*')
+            .select(`
+                *,
+                order_items (*)
+            `)
             .eq('user_id', userId)
             .order('created_at', { ascending: false });
 
         if (error) {
-            console.error('Get user orders error:', error);
+            console.error('Get user orders with details error:', error);
             return [];
         }
 
         return data || [];
     } catch (error) {
-        console.error('Get user orders error:', error);
+        console.error('Get user orders with details error:', error);
         return [];
     }
 }
 
-console.log('✅ Customer auth module loaded');
+// ============================================
+// LOGOUT FROM ALL DEVICES
+// ============================================
+
+async function logoutAllDevices() {
+    try {
+        const { error } = await supabase.auth.signOut({ scope: 'global' });
+
+        if (error) {
+            console.error('Logout all devices error:', error);
+            return { error };
+        }
+
+        console.log('✅ Logged out from all devices');
+        return { success: true };
+    } catch (error) {
+        console.error('Logout all devices error:', error);
+        return { error };
+    }
+}
+
+// ============================================
+// CHECK IF EMAIL EXISTS
+// ============================================
+
+async function checkEmailExists(email) {
+    try {
+        const { data, error } = await supabase
+            .from('users')
+            .select('email')
+            .eq('email', email)
+            .single();
+
+        if (error && error.code !== 'PGRST116') {
+            console.error('Check email error:', error);
+            return { exists: false, error };
+        }
+
+        return { exists: !!data, data };
+    } catch (error) {
+        console.error('Check email error:', error);
+        return { exists: false, error };
+    }
+}
+
+console.log('✅ Customer auth module fully loaded!');

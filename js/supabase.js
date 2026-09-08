@@ -192,12 +192,11 @@ function updateQuantity(index, change) {
     return cart;
 }
 
-// Clear cart (FIXED)
+// Clear cart
 function clearCart() {
     cart = [];
     localStorage.removeItem('marvyCart');
     
-    // Update all cart count badges
     document.querySelectorAll('.cart-count').forEach(el => {
         el.textContent = '0';
     });
@@ -355,6 +354,180 @@ async function updateOrderStatus(orderId, status) {
     } catch (error) {
         console.error('Error in updateOrderStatus:', error);
         return { error };
+    }
+}
+
+// ============================================
+// FAVOURITES FUNCTIONS
+// ============================================
+
+// Check if a product is in favourites
+async function isFavourite(productId) {
+    try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session) {
+            return { isFavourite: false };
+        }
+
+        const userId = session.user.id;
+
+        const { data, error } = await supabase
+            .from('favourites')
+            .select('*')
+            .eq('user_id', userId)
+            .eq('product_id', productId)
+            .maybeSingle();
+
+        if (error && error.code !== 'PGRST116') {
+            console.error('Check favourite error:', error);
+            return { isFavourite: false };
+        }
+
+        return { isFavourite: !!data };
+    } catch (error) {
+        console.error('Check favourite error:', error);
+        return { isFavourite: false };
+    }
+}
+
+// Add a product to favourites
+async function addFavourite(productId) {
+    try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session) {
+            return { 
+                error: { message: 'Please sign in to save favourites.' },
+                loggedOut: true 
+            };
+        }
+
+        const userId = session.user.id;
+
+        // Check if already favourited
+        const { data: existing, error: checkError } = await supabase
+            .from('favourites')
+            .select('*')
+            .eq('user_id', userId)
+            .eq('product_id', productId)
+            .maybeSingle();
+
+        if (checkError && checkError.code !== 'PGRST116') {
+            console.error('Check favourite error:', checkError);
+            return { error: checkError };
+        }
+
+        if (existing) {
+            return { error: { message: 'Already in favourites' } };
+        }
+
+        const { data, error } = await supabase
+            .from('favourites')
+            .insert([{ user_id: userId, product_id: productId }])
+            .select();
+
+        if (error) {
+            console.error('Add favourite error:', error);
+            return { error };
+        }
+
+        console.log('✅ Added to favourites:', data);
+        return { data };
+    } catch (error) {
+        console.error('Add favourite error:', error);
+        return { error };
+    }
+}
+
+// Remove a product from favourites
+async function removeFavourite(productId) {
+    try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session) {
+            return { 
+                error: { message: 'Please sign in to manage favourites.' },
+                loggedOut: true 
+            };
+        }
+
+        const userId = session.user.id;
+
+        const { data, error } = await supabase
+            .from('favourites')
+            .delete()
+            .eq('user_id', userId)
+            .eq('product_id', productId)
+            .select();
+
+        if (error) {
+            console.error('Remove favourite error:', error);
+            return { error };
+        }
+
+        console.log('✅ Removed from favourites:', data);
+        return { data };
+    } catch (error) {
+        console.error('Remove favourite error:', error);
+        return { error };
+    }
+}
+
+// Toggle favourite (add or remove)
+async function toggleFavourite(productId) {
+    const { isFavourite: currentlyFav } = await isFavourite(productId);
+    
+    if (currentlyFav) {
+        return await removeFavourite(productId);
+    } else {
+        return await addFavourite(productId);
+    }
+}
+
+// Get all favourites for the current user
+async function getFavourites() {
+    try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session) {
+            return { data: [], error: null };
+        }
+
+        const userId = session.user.id;
+
+        // First get the favourite product IDs
+        const { data: favData, error: favError } = await supabase
+            .from('favourites')
+            .select('product_id')
+            .eq('user_id', userId);
+
+        if (favError) {
+            console.error('Get favourites error:', favError);
+            return { data: [], error: favError };
+        }
+
+        if (favData.length === 0) {
+            return { data: [], error: null };
+        }
+
+        // Then get the product details
+        const productIds = favData.map(f => f.product_id);
+        
+        const { data: products, error: productError } = await supabase
+            .from('product')
+            .select('*')
+            .in('id', productIds);
+
+        if (productError) {
+            console.error('Get favourite products error:', productError);
+            return { data: [], error: productError };
+        }
+
+        return { data: products, error: null };
+    } catch (error) {
+        console.error('Get favourites error:', error);
+        return { data: [], error };
     }
 }
 

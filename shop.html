@@ -8,52 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-<script>
-    // Check if customer is logged in (with delay to ensure Supabase loads)
-    (function checkAuth() {
-        // Skip check on login, signup, forgot-password pages
-        const skipPages = ['login.html', 'signup.html', 'forgot-password.html', 'account.html'];
-        const currentPage = window.location.pathname.split('/').pop();
-        
-        if (skipPages.includes(currentPage)) {
-            return;
-        }
-
-        // Wait for Supabase to be available
-        if (typeof supabase === 'undefined') {
-            console.log('⏳ Waiting for Supabase to load...');
-            setTimeout(checkAuth, 300);
-            return;
-        }
-
-        // Also wait for auth to be ready
-        if (!supabase.auth) {
-            console.log('⏳ Waiting for Supabase auth...');
-            setTimeout(checkAuth, 300);
-            return;
-        }
-
-        // Check if user is logged in
-        supabase.auth.getSession()
-            .then(({ data: { session }, error }) => {
-                if (error) {
-                    console.error('Session check error:', error);
-                    return;
-                }
-
-                if (!session) {
-                    // Not logged in - redirect to login
-                    const currentUrl = window.location.href;
-                    window.location.href = `login.html?redirect=${encodeURIComponent(currentUrl)}`;
-                } else {
-                    console.log('✅ User is logged in:', session.user.email);
-                }
-            })
-            .catch(error => {
-                console.error('Auth check error:', error);
-            });
-    })();
-</script>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -63,18 +17,18 @@
                     <span class="logo-sub">Events &amp; More</span>
                 </a>
             </div>
-         <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="shop.html">Cakes</a></li>
-    <li><a href="custom-order.html">Custom Order</a></li>
-    <li><a href="delivery.html">Delivery</a></li>
-    <li><a href="index.html#about">About</a></li>
-</ul>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html" class="active">Cakes</a></li>
+                <li><a href="custom-order.html">Custom Order</a></li>
+                <li><a href="delivery.html">Delivery</a></li>
+                <li><a href="index.html#about">About</a></li>
+            </ul>
             <div class="nav-actions">
-<a href="cart.html" class="cart-icon">
-    Cart <span class="cart-count">0</span>
-</a>
-<a href="login.html" class="account-icon">👤</a>
+                <a href="cart.html" class="cart-icon">
+                    🛒 <span class="cart-count">0</span>
+                </a>
+                <a href="login.html" class="account-icon">👤</a>
             </div>
             <button class="menu-toggle" aria-label="Toggle menu">☰</button>
         </div>
@@ -116,7 +70,6 @@
             <div class="products-grid" id="shopProductGrid">
                 <div class="loading">Loading cakes...</div>
             </div>
-            
         </section>
     </main>
 
@@ -126,36 +79,38 @@
             <div class="footer-brand">
                 <h3>MARVY CAKES</h3>
                 <p>Premium cakes, hampers, food, surprises &amp; event decorations.</p>
-               <div class="social-links">
-    <a href="#">Instagram</a>
-    <a href="#">Facebook</a>
-    <a href="#">Twitter</a>
-    <a href="#">Pinterest</a>
-</div>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">Facebook</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Pinterest</a>
+                </div>
             </div>
             <div class="footer-links">
-                <h4>Quick Links</h4>
+                <h4>Explore</h4>
                 <ul>
-                    <li><a href="shop.html">Shop All</a></li>
-                    <li><a href="#">Cakes</a></li>
+                    <li><a href="shop.html">Cakes</a></li>
                     <li><a href="#">Hampers</a></li>
+                    <li><a href="#">Food</a></li>
                     <li><a href="#">Surprise Packages</a></li>
+                    <li><a href="#">Sign-out Packages</a></li>
+                    <li><a href="#">Event Decoration</a></li>
                 </ul>
             </div>
             <div class="footer-service">
-                <h4>Customer Service</h4>
+                <h4>Customer Care</h4>
                 <ul>
                     <li><a href="#">Contact Us</a></li>
                     <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Delivery Info</a></li>
+                    <li><a href="delivery.html">Delivery Info</a></li>
                     <li><a href="#">Returns</a></li>
                 </ul>
             </div>
             <div class="footer-contact">
                 <h4>Get in Touch</h4>
-               <p><a href="https://wa.me/2347048513759" target="_blank">WhatsApp: +234 704 851 3759</a></p>
-<p><a href="mailto:anighoromarvelous@gmail.com">anighoromarvelous@gmail.com</a></p>
-<p>Akungba Akoko, Nigeria</p>
+                <p><a href="https://wa.me/2347048513759" target="_blank">WhatsApp: +234 704 851 3759</a></p>
+                <p><a href="mailto:anighoromarvelous@gmail.com">anighoromarvelous@gmail.com</a></p>
+                <p>Akungba Akoko, Nigeria</p>
             </div>
         </div>
         <div class="footer-bottom">
@@ -166,10 +121,13 @@
     <!-- JavaScript -->
     <script src="js/config.js"></script>
     <script src="js/supabase.js"></script>
+    <script src="js/favourites.js"></script>
     <script src="js/utils.js"></script>
 
     <script>
-        // Load all products when page loads
+        // ============================================
+        // LOAD PRODUCTS
+        // ============================================
         document.addEventListener('DOMContentLoaded', async function() {
             const grid = document.getElementById('shopProductGrid');
             
@@ -189,50 +147,72 @@
             }
         });
 
-        // Display products
+        // ============================================
+        // DISPLAY PRODUCTS WITH HEART BUTTON
+        // ============================================
         function displayProducts(products, grid) {
             if (products.length === 0) {
                 grid.innerHTML = '<p>No products found.</p>';
                 return;
             }
             
-            grid.innerHTML = products.map(product => `
-                <div class="product-card-luxury">
-                    <div class="product-image-container">
-                        ${product.badge === 'Best Seller' ? '<span class="product-badge best-seller">⭐ Best Seller</span>' : ''}
-                        ${product.badge === 'New' ? '<span class="product-badge new">✨ New</span>' : ''}
-                        <div class="product-image">
-                            ${product.image_url ? 
-                                `<img src="${product.image_url}" alt="${product.name}">` :
-                                '🎂'
-                            }
+            grid.innerHTML = products.map(product => {
+                let badgeHTML = '';
+                if (product.badge === 'Best Seller') {
+                    badgeHTML = `<span class="product-badge best-seller">⭐ Best Seller</span>`;
+                } else if (product.badge === 'New') {
+                    badgeHTML = `<span class="product-badge new">✨ New</span>`;
+                }
+
+                return `
+                    <div class="product-card-luxury">
+                        <div class="product-image-container">
+                            ${badgeHTML}
+                            <!-- FAVOURITE HEART BUTTON -->
+                            <button class="fav-btn" onclick="handleFavourite(${product.id}, event)" data-product-id="${product.id}">
+                                <span class="fav-icon">♡</span>
+                            </button>
+                            <div class="product-image">
+                                ${product.image_url ? 
+                                    `<img src="${product.image_url}" alt="${product.name}">` :
+                                    '🎂'
+                                }
+                            </div>
+                            <div class="product-overlay">
+                                <a href="product-details.html?id=${product.id}" class="btn-view">View Details</a>
+                            </div>
                         </div>
-                        <div class="product-overlay">
-                            <a href="product-details.html?id=${product.id}" class="btn-view">View Details</a>
+                        <div class="product-info">
+                            <h3>${product.name}</h3>
+                            <p class="product-category">${product.category || 'Cakes'}</p>
+                            <p class="product-price">₦${Number(product.price).toLocaleString()}</p>
+                            <button class="btn-add" onclick="addToCart(${JSON.stringify(product).replace(/"/g, "'")})">
+                                Add to Cart
+                            </button>
                         </div>
                     </div>
-                    <div class="product-info">
-                        <h3>${product.name}</h3>
-                        <p class="product-price">₦${product.price.toLocaleString()}</p>
-                        <button class="btn-add" onclick="addToCart(${JSON.stringify(product).replace(/"/g, "'")})">
-                            Add to Cart
-                        </button>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
+
+            // Load favourite states after rendering
+            loadFavouriteStates();
         }
 
-        // Setup filters and search
+        // ============================================
+        // SETUP FILTERS AND SEARCH
+        // ============================================
         function setupFilters(products, grid) {
             let currentProducts = [...products];
 
             document.querySelectorAll('#categoryFilters a').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
+                    
                     document.querySelectorAll('#categoryFilters a').forEach(l => l.classList.remove('active'));
                     this.classList.add('active');
                     
                     const category = this.dataset.category;
+                    
                     if (category === 'all') {
                         currentProducts = [...products];
                     } else {
@@ -245,6 +225,7 @@
                             p.name.toLowerCase().includes(searchTerm)
                         );
                     }
+                    
                     applySort(currentProducts, grid);
                 });
             });
@@ -253,13 +234,19 @@
                 const searchTerm = this.value.toLowerCase();
                 const activeCategory = document.querySelector('#categoryFilters a.active');
                 const category = activeCategory ? activeCategory.dataset.category : 'all';
+                
                 let filtered = [...products];
+                
                 if (category !== 'all') {
                     filtered = filtered.filter(p => p.category === category);
                 }
+                
                 if (searchTerm) {
-                    filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm));
+                    filtered = filtered.filter(p => 
+                        p.name.toLowerCase().includes(searchTerm)
+                    );
                 }
+                
                 applySort(filtered, grid);
             });
 
@@ -267,37 +254,34 @@
                 const searchTerm = document.getElementById('searchProducts').value.toLowerCase();
                 const activeCategory = document.querySelector('#categoryFilters a.active');
                 const category = activeCategory ? activeCategory.dataset.category : 'all';
+                
                 let filtered = [...products];
+                
                 if (category !== 'all') {
                     filtered = filtered.filter(p => p.category === category);
                 }
+                
                 if (searchTerm) {
-                    filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm));
+                    filtered = filtered.filter(p => 
+                        p.name.toLowerCase().includes(searchTerm)
+                    );
                 }
+                
                 applySort(filtered, grid);
             });
 
             function applySort(filtered, grid) {
                 const sortBy = document.getElementById('sortProducts').value;
+                
                 if (sortBy === 'price-low') {
                     filtered.sort((a, b) => a.price - b.price);
                 } else if (sortBy === 'price-high') {
                     filtered.sort((a, b) => b.price - a.price);
                 }
+                
                 displayProducts(filtered, grid);
             }
         }
-        // ===== HAMBURGER MENU =====
-document.addEventListener('DOMContentLoaded', function() {
-    const toggle = document.querySelector('.menu-toggle');
-    const nav = document.querySelector('.nav-links');
-    
-    if (toggle && nav) {
-        toggle.addEventListener('click', function() {
-            nav.classList.toggle('active');
-        });
-    }
-});
     </script>
 </body>
 </html>

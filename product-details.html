@@ -18,17 +18,17 @@
                 </a>
             </div>
             <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="shop.html">Cakes</a></li>
-    <li><a href="custom-order.html">Custom Order</a></li>
-    <li><a href="delivery.html">Delivery</a></li>
-    <li><a href="index.html#about">About</a></li>
-</ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Cakes</a></li>
+                <li><a href="custom-order.html">Custom Order</a></li>
+                <li><a href="delivery.html">Delivery</a></li>
+                <li><a href="index.html#about">About</a></li>
+            </ul>
             <div class="nav-actions">
                 <a href="cart.html" class="cart-icon">
-    Cart <span class="cart-count">0</span>
-</a>
-<a href="#account" class="account-icon">Account</a>
+                    🛒 <span class="cart-count">0</span>
+                </a>
+                <a href="#account" class="account-icon">👤</a>
             </div>
             <button class="menu-toggle" aria-label="Toggle menu">☰</button>
         </div>
@@ -57,6 +57,14 @@
                     </div>
 
                     <h1 id="productName">Product Name</h1>
+
+                    <!-- FAVOURITE BUTTON -->
+                    <div id="favContainer" class="fav-detail-container">
+                        <button class="fav-btn-detail" onclick="handleFavouriteDetail(currentProduct?.id)" id="favDetailBtn">
+                            <span class="fav-icon-detail" id="favDetailIcon">♡</span>
+                            <span id="favDetailText">Add to Favourites</span>
+                        </button>
+                    </div>
 
                     <div class="product-rating">
                         <span class="stars">★★★★★</span>
@@ -146,45 +154,48 @@
             <div class="footer-brand">
                 <h3>MARVY CAKES</h3>
                 <p>Premium cakes, hampers, food, surprises &amp; event decorations.</p>
-               <div class="social-links">
-    <a href="#">Instagram</a>
-    <a href="#">Facebook</a>
-    <a href="#">Twitter</a>
-    <a href="#">Pinterest</a>
-</div>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">Facebook</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Pinterest</a>
+                </div>
             </div>
             <div class="footer-links">
-                <h4>Quick Links</h4>
+                <h4>Explore</h4>
                 <ul>
-                    <li><a href="shop.html">Shop All</a></li>
-                    <li><a href="#">Cakes</a></li>
+                    <li><a href="shop.html">Cakes</a></li>
                     <li><a href="#">Hampers</a></li>
+                    <li><a href="#">Food</a></li>
                     <li><a href="#">Surprise Packages</a></li>
+                    <li><a href="#">Sign-out Packages</a></li>
+                    <li><a href="#">Event Decoration</a></li>
                 </ul>
             </div>
             <div class="footer-service">
-                <h4>Customer Service</h4>
+                <h4>Customer Care</h4>
                 <ul>
                     <li><a href="#">Contact Us</a></li>
                     <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Delivery Info</a></li>
+                    <li><a href="delivery.html">Delivery Info</a></li>
                     <li><a href="#">Returns</a></li>
                 </ul>
             </div>
             <div class="footer-contact">
+                <h4>Get in Touch</h4>
                 <p><a href="https://wa.me/2347048513759" target="_blank">WhatsApp: +234 704 851 3759</a></p>
-<p><a href="mailto:anighoromarvelous@gmail.com">anighoromarvelous@gmail.com</a></p>
-<p>Akungba Akoko, Nigeria</p>
+                <p><a href="mailto:anighoromarvelous@gmail.com">anighoromarvelous@gmail.com</a></p>
+                <p>Akungba Akoko, Nigeria</p>
             </div>
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Marvy Cakes &amp; Events. All rights reserved.</p>
         </div>
     </footer>
-
-    <!-- JavaScript -->
+        <!-- JavaScript -->
     <script src="js/config.js"></script>
     <script src="js/supabase.js"></script>
+    <script src="js/favourites.js"></script>
     <script src="js/utils.js"></script>
 
     <script>
@@ -257,8 +268,8 @@
         function displayProduct(product) {
             document.getElementById('productName').textContent = product.name;
             document.getElementById('productCategory').textContent = product.category || 'Cakes';
-            document.getElementById('productPrice').textContent = '₦' + product.price.toLocaleString();
-            document.getElementById('productDescription').innerHTML = '<p>' + (product.description || 'Premium cake from Marvy Cakes & Events.') + '</p>';
+            document.getElementById('productPrice').textContent = `₦${product.price.toLocaleString()}`;
+            document.getElementById('productDescription').innerHTML = `<p>${product.description || 'Premium cake from Marvy Cakes & Events.'}</p>`;
 
             // Check if product has sizes
             const sizes = getProductSizes(product);
@@ -271,17 +282,15 @@
                 sizeSection.style.display = 'flex';
                 sizeSelector.innerHTML = '<option value="">Select size...</option>';
                 
-                const sizeKeys = Object.keys(sizes);
-                for (let i = 0; i < sizeKeys.length; i++) {
-                    const size = sizeKeys[i];
+                Object.keys(sizes).forEach(size => {
                     const price = sizes[size];
                     const option = document.createElement('option');
                     option.value = size;
-                    option.textContent = size + ' — ₦' + price.toLocaleString();
+                    option.textContent = `${size} — ₦${price.toLocaleString()}`;
                     sizeSelector.appendChild(option);
-                }
+                });
 
-                const defaultSize = sizeKeys[0];
+                const defaultSize = Object.keys(sizes)[0];
                 sizeSelector.value = defaultSize;
                 updatePriceForSize(product, defaultSize);
                 selectedSizeSpan.textContent = defaultSize;
@@ -294,7 +303,7 @@
                         selectedSizeSpan.textContent = selected;
                         sizeInfo.style.display = 'block';
                     } else {
-                        document.getElementById('productPrice').textContent = '₦' + product.price.toLocaleString();
+                        document.getElementById('productPrice').textContent = `₦${product.price.toLocaleString()}`;
                         sizeInfo.style.display = 'none';
                     }
                 };
@@ -324,17 +333,52 @@
                     <img src="${product.image_url}" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;">
                 `;
             } else {
-                imageContainer.innerHTML = '<div class="image-placeholder">🎂</div>';
+                imageContainer.innerHTML = `<div class="image-placeholder">🎂</div>`;
             }
+
+            // Update thumbnails
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach((thumb, index) => {
+                if (index === 0) thumb.classList.add('active');
+                else thumb.classList.remove('active');
+            });
 
             // Update cart count
             updateCartCount();
+
+            // Load favourite state for this product
+            loadFavouriteState(product.id);
         }
 
         function updatePriceForSize(product, size) {
             const price = getSizePrice(product, size);
-            document.getElementById('productPrice').textContent = '₦' + price.toLocaleString();
+            document.getElementById('productPrice').textContent = `₦${price.toLocaleString()}`;
         }
+
+        // Override addToCart to include size
+        const originalAddToCart = addToCart;
+        addToCart = function(product, quantity, size) {
+            let cart = loadCart();
+            let cartItem = { ...product };
+            if (size) {
+                const sizePrice = getSizePrice(product, size);
+                cartItem.name = `${product.name} (${size})`;
+                cartItem.price = sizePrice;
+                cartItem.selectedSize = size;
+            }
+            
+            const existing = cart.find(item => item.id === cartItem.id && item.selectedSize === size);
+            if (existing) {
+                existing.quantity += quantity || 1;
+            } else {
+                cart.push({ ...cartItem, quantity: quantity || 1 });
+            }
+            
+            saveCart(cart);
+            updateCartCount();
+            showToast('Added to Cart ✨', `${cartItem.name} added to cart`, '🎂', 'success');
+            return cart;
+        };
 
         // Load related products
         async function loadRelatedProducts(category) {
@@ -342,30 +386,28 @@
             
             try {
                 const allProducts = await getProducts();
-                const related = allProducts.filter(function(p) {
-                    return p.category === category && p.id !== currentProduct.id;
-                }).slice(0, 4);
+                const related = allProducts
+                    .filter(p => p.category === category && p.id !== currentProduct?.id)
+                    .slice(0, 4);
 
                 if (related.length > 0) {
-                    container.innerHTML = related.map(function(product) {
-                        return `
-                            <div class="product-card-luxury">
-                                <div class="product-image-container">
-                                    <div class="product-image">
-                                        ${product.image_url ? 
-                                            '<img src="' + product.image_url + '" alt="' + product.name + '">' :
-                                            '🎂'
-                                        }
-                                    </div>
-                                </div>
-                                <div class="product-info">
-                                    <h3>${product.name}</h3>
-                                    <p class="product-price">₦${product.price.toLocaleString()}</p>
-                                    <a href="product-details.html?id=${product.id}" class="btn-add">View Details</a>
+                    container.innerHTML = related.map(product => `
+                        <div class="product-card-luxury">
+                            <div class="product-image-container">
+                                <div class="product-image">
+                                    ${product.image_url ? 
+                                        `<img src="${product.image_url}" alt="${product.name}">` :
+                                        '🎂'
+                                    }
                                 </div>
                             </div>
-                        `;
-                    }).join('');
+                            <div class="product-info">
+                                <h3>${product.name}</h3>
+                                <p class="product-price">₦${product.price.toLocaleString()}</p>
+                                <a href="product-details.html?id=${product.id}" class="btn-add">View Details</a>
+                            </div>
+                        </div>
+                    `).join('');
                 } else {
                     container.innerHTML = '<p style="text-align:center;color:#5a4a4a;">No related products found.</p>';
                 }
@@ -402,16 +444,15 @@
                     return;
                 }
                 
-                // Add to cart using the original function from supabase.js
-                addToCart(currentProduct);
+                addToCart(currentProduct, quantity, selectedSize);
                 
                 this.textContent = '✅ Added!';
                 this.style.background = '#2e7d32';
                 this.style.color = 'white';
-                setTimeout(function() {
-                    document.getElementById('addToCartBtn').textContent = 'Add to Cart';
-                    document.getElementById('addToCartBtn').style.background = '';
-                    document.getElementById('addToCartBtn').style.color = '';
+                setTimeout(() => {
+                    this.textContent = 'Add to Cart';
+                    this.style.background = '';
+                    this.style.color = '';
                 }, 2000);
             }
         });
@@ -428,21 +469,10 @@
                     return;
                 }
                 
-                addToCart(currentProduct);
+                addToCart(currentProduct, quantity, selectedSize);
                 window.location.href = 'cart.html';
             }
         });
-        // ===== HAMBURGER MENU =====
-document.addEventListener('DOMContentLoaded', function() {
-    const toggle = document.querySelector('.menu-toggle');
-    const nav = document.querySelector('.nav-links');
-    
-    if (toggle && nav) {
-        toggle.addEventListener('click', function() {
-            nav.classList.toggle('active');
-        });
-    }
-});
     </script>
 </body>
 </html>

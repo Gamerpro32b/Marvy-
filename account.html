@@ -94,18 +94,33 @@
         </div>
     </footer>
 
-    <!-- JavaScript -->
+    <!-- JavaScript - ORDER MATTERS! -->
     <script src="js/config.js"></script>
     <script src="js/supabase.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/favourites.js"></script>
     <script src="js/utils.js"></script>
 
     <script>
+        // ============================================
+        // MAIN ACCOUNT PAGE
+        // ============================================
         document.addEventListener('DOMContentLoaded', async function() {
             const container = document.getElementById('accountContainer');
             
             try {
-                // Check if user is logged in
+                // Check if auth functions exist
+                if (typeof getCustomerSession === 'undefined') {
+                    console.error('❌ auth.js not loaded properly!');
+                    container.innerHTML = `
+                        <div class="account-error">
+                            <p>❌ Authentication module not loaded. Please refresh.</p>
+                            <a href="login.html" class="btn-primary">Go to Login</a>
+                        </div>
+                    `;
+                    return;
+                }
+
                 const session = await getCustomerSession();
                 
                 if (!session) {
@@ -125,8 +140,46 @@
 
                 const user = session.user;
                 
-                // Get orders using the updated function (by user_id)
-                const orders = await getCustomerOrders(user.email) || [];
+                // Get orders - try both methods
+                let orders = [];
+                try {
+                    // Try by user_id first
+                    const { data: ordersData, error: ordersError } = await supabase
+                        .from('orders')
+                        .select('*')
+                        .eq('user_id', user.id)
+                        .order('created_at', { ascending: false });
+
+                    if (!ordersError && ordersData) {
+                        orders = ordersData;
+                    } else if (user.email) {
+                        // Fallback to email
+                        const { data: fallbackOrders, error: fallbackError } = await supabase
+                            .from('orders')
+                            .select('*')
+                            .eq('customer_email', user.email)
+                            .order('created_at', { ascending: false });
+                        
+                        if (!fallbackError && fallbackOrders) {
+                            orders = fallbackOrders;
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Could not load orders:', e);
+                }
+
+                // Get favourites
+                let favourites = [];
+                try {
+                    if (typeof getFavourites !== 'undefined') {
+                        const favResult = await getFavourites();
+                        if (!favResult.error) {
+                            favourites = favResult.data || [];
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Could not load favourites:', e);
+                }
 
                 container.innerHTML = `
                     <div class="account-dashboard">
@@ -188,29 +241,83 @@
                                 <a href="shop.html" class="btn-primary">Start Shopping</a>
                             `}
                         </div>
+
+                        <!-- Favourites Section -->
+                        <div class="account-favourites-section">
+                            <h3>My Favourites 💖</h3>
+                            <div id="favouritesGrid" class="favourites-grid">
+                                ${favourites.length > 0 ? favourites.map(product => `
+                                    <div class="product-card-luxury fav-product-card">
+                                        <div class="product-image-container">
+                                            <button class="fav-btn fav-active" onclick="handleFavourite(${product.id}, event)" data-product-id="${product.id}">
+                                                <span class="fav-icon">❤️</span>
+                                            </button>
+                                            <div class="product-image">
+                                                ${product.image_url ? 
+                                                    `<img src="${product.image_url}" alt="${product.name}">` :
+                                                    '🎂'
+                                                }
+                                            </div>
+                                            <div class="product-overlay">
+                                                <a href="product-details.html?id=${product.id}" class="btn-view">View Details</a>
+                                            </div>
+                                        </div>
+                                        <div class="product-info">
+                                            <h3>${product.name}</h3>
+                                            <p class="product-price">₦${product.price.toLocaleString()}</p>
+                                            <button class="btn-add" onclick="addToCart(${JSON.stringify(product).replace(/"/g, "'")})">
+                                                Add to Cart
+                                            </button>
+                                        </div>
+                                    </div>
+                                `).join('') : `
+                                    <div class="empty-favourites">
+                                        <span class="empty-icon">💖</span>
+                                        <h4>No favourites yet</h4>
+                                        <p>Save products you love and they'll appear here.</p>
+                                        <a href="shop.html" class="btn-primary">Browse Products</a>
+                                    </div>
+                                `}
+                            </div>
+                        </div>
                     </div>
                 `;
 
                 // Logout button
-                document.getElementById('logoutBtn').addEventListener('click', async function() {
-                    if (confirm('Are you sure you want to logout?')) {
-                        const result = await customerLogout();
-                        if (result.error) {
-                            showToast('Error', 'Logout failed. Please try again.', '❌', 'error');
-                        } else {
-                            window.location.href = 'login.html';
+                const logoutBtn = document.getElementById('logoutBtn');
+                if (logoutBtn && typeof customerLogout !== 'undefined') {
+                    logoutBtn.addEventListener('click', async function() {
+                        if (confirm('Are you sure you want to logout?')) {
+                            const result = await customerLogout();
+                            if (result.error) {
+                                alert('Logout failed. Please try again.');
+                            } else {
+                                window.location.href = 'login.html';
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
             } catch (error) {
                 console.error('Account error:', error);
                 container.innerHTML = `
                     <div class="account-error">
-                        <p>❌ Error loading account. Please refresh and try again.</p>
+                        <p>❌ Error loading account: ${error.message || 'Unknown error'}</p>
                         <a href="login.html" class="btn-primary">Go to Login</a>
                     </div>
                 `;
+            }
+        });
+
+        // ===== HAMBURGER MENU =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggle = document.querySelector('.menu-toggle');
+            const nav = document.querySelector('.nav-links');
+            
+            if (toggle && nav) {
+                toggle.addEventListener('click', function() {
+                    nav.classList.toggle('active');
+                });
             }
         });
     </script>
