@@ -145,6 +145,22 @@
                 console.error('Error loading products:', error);
                 grid.innerHTML = '<p>Error loading products. Please try again.</p>';
             }
+
+            // ===== HAMBURGER MENU =====
+            const toggle = document.querySelector('.menu-toggle');
+            const nav = document.querySelector('.nav-links');
+            
+            if (toggle && nav) {
+                toggle.addEventListener('click', function() {
+                    nav.classList.toggle('active');
+                    // Change icon between ☰ and ✕
+                    if (nav.classList.contains('active')) {
+                        toggle.textContent = '✕';
+                    } else {
+                        toggle.textContent = '☰';
+                    }
+                });
+            }
         });
 
         // ============================================
@@ -195,7 +211,9 @@
             }).join('');
 
             // Load favourite states after rendering
-            loadFavouriteStates();
+            if (typeof loadFavouriteStates !== 'undefined') {
+                loadFavouriteStates();
+            }
         }
 
         // ============================================
